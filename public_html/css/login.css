@@ -1,0 +1,85 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+
+	margin: 0 auto;
+	padding: 10px;
+
+	background-color: white;
+	width: 40%;
+	height: 60%;
+
+	border-radius: 20px;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Style the icon and position it within the container */
+.icon {
+    position: absolute;
+    top: 25%;
+    transform: translateY(-25%);
+    left: 10px;  Adjust the left spacing as needed 
+}
+
+i {
+	color: black;
+}
+
+/* Style the input to have padding on the left to make room for the icon */
+input {
+    padding-left: 30px; /* Adjust the left padding to match the icon width */
+    width: 100%;
+}
+
+input:focus {
+	outline-color: red;
+}
+
+#forgotPassword {
+	position: relative;
+	left: 40%;
+	color: gray;
+	font-size: 12pt;
+	margin-bottom: 5px;
+	margin-top: 0;
+}
+
+button {
+	width: 30%;
+	font-size: 10pt;
+	border-radius: 50px;
+
+	margin-top: 30px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+
+	width: 100%;
+	height: 10%;
+
+	background-color: red;
+}
+
+p {
+	color: white;
+	margin-left: 50%;
+
+}
+
+
+

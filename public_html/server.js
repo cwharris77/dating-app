@@ -69,7 +69,8 @@ function removeSessions() {
 }
 
 function generateSalt(password) {
-
+    let salt = Math.floor(Math.random() * 1000000000);
+    return password + salt;
 }
 
 setInterval(removeSessions, 2000);
@@ -94,6 +95,32 @@ function checkSession(req, res, next) {
         res.redirect('/index.html');
     }
 }
+
+app.post("/create/account", (req, res) => {
+    // This creates an account and generates a salt and hash.
+    
+    let newUsername = req.body.username;
+    let newPassword = req.body.password;
+
+    let newSalt = generateSalt(newPassword);
+
+    var hash = crypto.createHash('sha3-256');
+    let data = hash.update(newSalt, 'utf-8');
+    let newHash = data.digest('hex');
+
+    var newUser = new User({ 
+        username: newUsername,
+        salt: newSalt,
+        hash: newHash,
+        settings: {}
+    });
+
+    newUser.save().then( (doc) => { 
+        res.end('SUCCESS');
+    }).catch( (err) => { 
+        res.end('FAILURE');
+    });
+});
 
 app.get("/login/:USERNAME/:PASSWORD", (req, res) => {
     // Login

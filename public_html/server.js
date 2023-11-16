@@ -87,13 +87,13 @@ function checkSession(req, res, next) {
                 sessions[c.login.username].id == c.login.sessionID) {
                 next();
             } else {
-                res.redirect('/index.html');
+                res.redirect('/app/homepage.html');
             } 
         } else {
-            res.redirect('/index.html');
+            res.redirect('/app/homepage.html');
         }   
     } else {
-        res.redirect('/index.html');
+        res.redirect('/app/homepage.html');
     }
 }
 
@@ -170,14 +170,14 @@ app.post("/edit/settings", (req, res) => {
     db.collection("users").findOne({username: searchedUser}, function(err, doc) {
         if (doc) {
             for (prop in doc.settings) {
-                if (!darkMode) {
-                    prop.dark = darkMode;
-                } (!hideLocation) {
-                    prop.location = hideLocation;
-                }
+                
             }
         }
     });
+});
+
+app.post("/edit/profile", (req, res) => {
+     
 });
 
 app.listen(port, () => {

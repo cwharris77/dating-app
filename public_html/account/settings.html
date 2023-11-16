@@ -4,11 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Your Dating App</title>
-    <!-- Add your CSS link here -->
+    <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
     <section>
-        <!-- User preferences and account management options -->
+        <form action="" id="userSettings">
+            <!-- User preferences and account management options -->
+            <h2>Settings</h2>
+            
+            <div id="pushNotifications">
+                <h3>Push Notifications</h3>
+        
+                <input type="checkbox" id="allowAll" name="allowAll" checked>
+                <label for="allowAll">
+                    Allow all notifications
+                </label>
+        
+                <input type="checkbox" id="newLikes" name="newLikes">
+                <label for="newLikes">
+                    New Likes
+                </label>
+        
+                <input type="checkbox" id="newMatches" name="newMatches">
+                <label for="newMatches">
+                    New Matches
+                </label>
+            </div>
+            
+            <div action="" id="gender-preference-container">
+                <div class="input-container">
+                    <h3>I'm interested in</h3>
+                    
+                    <input type="radio" id="men-option" name="preference" value="men">
+                    <label for="men-option">
+                        Men
+                    </label>
+                    
+                    <input type="radio" id="women-option" name="preference" value="women">
+                    <label for="women-option">
+                        Women
+                    </label>
+                    
+                    <input type="radio" id="nonb-option" name="preference" value="nonbinary">
+                    <label for="nonb-option">
+                        Nonbinary people
+                    </label>
+                    
+                    <input type="radio" id="everyone-option" name="preference" value="everyone">
+                    <label for="everyone-option">
+                        Everyone
+                    </label>
+                </div>
+            </div> 
+        </form>
+        
+        <form action="" id="accountSettings">
+            
+        </form>
+        
     </section>
 </body>
 </html>

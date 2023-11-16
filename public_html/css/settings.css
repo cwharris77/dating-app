@@ -1,0 +1,100 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+
+	margin: 0 auto;
+	padding: 10px;
+
+	background-color: white;
+	width: 40vh;
+	height: 90%;
+
+	border-radius: 20px;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+#gender-preference-container {
+    width: 300px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+
+#gender-preference-container input[type="radio"] {
+    display: none; /* Hide the default radio button */
+}
+
+#gender-preference-container label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+}
+
+#gender-preference-container label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #e53935;
+    background-color: #fff;
+    border-radius: 20%;
+}
+
+#gender-preference-container input[type="radio"]:checked + label::before {
+    background-color: #f1514e;
+    border-color: #e53935;
+}
+
+#pushNotifications {
+    width: 300px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+#pushNotifications input[type="checkbox"] {
+    display: none;
+}
+
+#pushNotifications label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+}
+
+#pushNotifications label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #e53935;
+    background-color: #fff;
+    border-radius: 20%;
+}
+
+#pushNotifications input[type="checkbox"]:checked + label::before {
+    background-color: #f1514e;
+    border-color: #e53935;
+}

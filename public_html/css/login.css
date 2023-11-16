@@ -1,9 +1,18 @@
 body {
     display: flex;
-    align-items: center;
+/*    align-items: center;*/
     justify-content: center;
     height: 100vh;
     margin: 0;
+}
+
+/* Form Styles */
+#formContainer {
+	width: 60%;
+	height: 50%;
+
+	margin-top: 20px;
+	padding: 0;
 }
 
 form {
@@ -14,11 +23,15 @@ form {
 	margin: 0 auto;
 	padding: 10px;
 
+	height: 100%;
+
 	background-color: white;
-	width: 40%;
-	height: 60%;
 
 	border-radius: 20px;
+}
+
+.hidden {
+	display: none;
 }
 
 .input-container {
@@ -57,10 +70,9 @@ input:focus {
 	margin-top: 0;
 }
 
-button {
+input[type="submit"] {
 	width: 30%;
 	font-size: 10pt;
-	border-radius: 50px;
 
 	margin-top: 30px;
 }

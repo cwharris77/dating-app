@@ -1,5 +1,5 @@
 function login() {
-	
+
   let us = document.getElementById('loginEmail').value;
   let pw = document.getElementById('loginPassword').value;
 
@@ -37,3 +37,22 @@ function createAccount() {
     alert(text.message);
   });
 }
+
+function showSignUp() {
+	let signUP = document.getElementById("signUpForm");
+	let login = document.getElementById("loginForm");
+
+	login.classList.add("hidden")
+	signUP.classList.remove("hidden")
+}
+
+function showLogin() {
+	let signUp = document.getElementById("signUpForm");
+	let login = document.getElementById("loginForm");
+
+	signUp.classList.add("hidden")
+	login.classList.remove("hidden")
+}
+
+
+

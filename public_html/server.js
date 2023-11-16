@@ -45,6 +45,7 @@ var matchModel = mongoose.model('matches', matchSchema );
 app.use(express.static("public_html"));
 
 var sessions = {};
+var mateSessions = {};
 
 function createSession(username) {
     let sid = Math.floor(Math.random() * 1000000000);
@@ -98,7 +99,7 @@ function checkSession(req, res, next) {
 
 app.post("/create/account", (req, res) => {
     // This creates an account and generates a salt and hash.
-    
+
     let newUsername = req.body.username;
     let newPassword = req.body.password;
 
@@ -148,6 +149,33 @@ app.get("/login/:USERNAME/:PASSWORD", (req, res) => {
         } else {
             // Username doesn't exist
             res.end(false);
+        }
+    });
+});
+
+app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
+    var client = req.params.CLIENT;
+    var date = req.params.DATE;
+    var status = req.params.STATUS;
+
+    mateSessions[client] = {date};
+
+});
+
+app.post("/edit/settings", (req, res) => {
+    var searchedUser = req.body.username;
+    var darkMode = req.body.dark;
+    var hideLocation = req.body.location;
+
+    db.collection("users").findOne({username: searchedUser}, function(err, doc) {
+        if (doc) {
+            for (prop in doc.settings) {
+                if (!darkMode) {
+                    prop.dark = darkMode;
+                } (!hideLocation) {
+                    prop.location = hideLocation;
+                }
+            }
         }
     });
 });

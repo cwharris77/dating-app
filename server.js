@@ -2,10 +2,10 @@
 const mongoose = require('mongoose');
 const express = require('express')
 const cookieParser = require('cookie-parser');
-const webcam = require('webcam-easy');
 const app = express()
 
-const hostname = "134.209.15.30";
+const hostname = "127.0.0.1";
+//134.209.15.30
 const port = 5000;
 
 app.use(cookieParser());
@@ -43,6 +43,7 @@ var bioModel = mongoose.model('biography', bioSchema );
 var matchModel = mongoose.model('matches', matchSchema );
 
 app.use(express.static("public_html"));
+app.use(express.static("./public_html/account", {index: 'login.html'}));
 
 var sessions = {};
 var mateSessions = {};

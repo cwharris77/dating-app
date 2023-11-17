@@ -12,10 +12,13 @@
     <link rel="stylesheet" type="text/css" href="../css/login.css">
 </head>
 <body>
-    <div id="formContainer">
-        <button onclick="showLogin();">Login</button>
-        <button onclick="showSignUp();">Sign Up</button>
-        <form id="loginForm">
+
+    <form id="loginForm">
+        <div class="button-container">
+             <button class="form-button" onclick="showSignUp();">Sign Up</button>
+            <button class="form-button" onclick="showLogin();">Login</button>
+        </div>
+        
         <h2>Login</h2>
         <div class="input-container">
             <i class="fa fa-envelope icon"></i>
@@ -31,7 +34,13 @@
 
         <input type="submit" value="Login With Email">
     </form>
+
     <form id="signUpForm" class="hidden">
+        <div class="button-container">
+             <button class="form-button" onclick="showSignUp();">Sign Up</button>
+             <button class="form-button" onclick="showLogin();">Login</button>
+        </div>
+
         <h2>Sign Up</h2>
         <div class="input-container">
             <i class="fa fa-envelope icon"></i>
@@ -45,9 +54,7 @@
 
         <input type="submit" value="Sign Up">
     </form>
-    </div>
     
-
     <footer>
         <p>Footer content</p>
     </footer>

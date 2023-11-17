@@ -5,36 +5,36 @@ function login() {
 
   let data = {username: us, password: pw};
   console.log(data)
-  // let p = fetch('/account/login/', {
-  //   method: 'POST', 
-  //   body: JSON.stringify(data),
-  //   headers: {"Content-Type": "application/json"}
-  // });
-  // p.then((response) => {
-  //   return response.text();
-  // }).then((text) => {
-  //   console.log(text);
-  //   if (text.startsWith('SUCCESS')) {
-  //   	window.location.href = '/app/home.html?user=' + encodeURIComponent(us);
-  //   } else {
-  //   	let p = document.querySelector('p')
-  //   	p.style.display = 'block'
-  //   }
-  // });
+  let p = fetch(`/login/${us}/${pw}`, {
+    method: 'POST', 
+    body: JSON.stringify(data),
+    headers: {"Content-Type": "application/json"}
+  });
+  p.then((response) => {
+    return response.text();
+  }).then((text) => {
+    console.log(text);
+    if (text.startsWith('true')) {
+    	window.location.href = '/app/homepage.html'; //?user=' + encodeURIComponent(us);
+    } else {
+    	console.log("attempt failed")
+    }
+  });
 }
 
 function createAccount() {
   let us = document.getElementById('usernameCreate').value;
   let pw = document.getElementById('passwordCreate').value;
-  let p = fetch('/add/user/', {
+
+  let p = fetch('/create/account', {
   	method: 'POST',
   	body: JSON.stringify({username: us, password: pw}),
   	headers: {"Content-Type": "application/json"}
   });
   p.then((response) => {
-    return response.json();
+    return response.text();
   }).then((text) => { 
-    alert(text.message);
+    alert(text);
   });
 }
 

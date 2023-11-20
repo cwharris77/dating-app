@@ -1,14 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile - Your Dating App</title>
-    <!-- Add your CSS link here -->
+    <link rel="stylesheet" href="../css/profile.css">
 </head>
+
 <body>
-    <section>
-        <!-- User profile details and editing options -->
-    </section>
+    <header>
+        <h1>Your Dating App</h1>
+    </header>
+
+    <main>
+        <section>
+            <!--Get info from server-->
+            <div class="user-header">
+                <h2 id="name">Akli Amrous</h2>
+                <h4 id="age">Age: 22</h4>
+                <h4 id="location">Location: Tucson, AZ</h4>
+                <h4 id="height">Height: 6'2</h4>
+            </div>
+
+            <div class="user-image">
+                <img src="https://brsc.sa.edu.au/wp-content/uploads/2018/09/placeholder-profile-sq.jpg"
+                    alt="profile pic">
+            </div>
+
+            <h3>About me: </h3>
+            <div class="bio">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iure, molestiae.
+                Ea nihil assumenda iusto quis aspernatur expedita, eum aut nostrum error asperiores
+                debitis beatae consequuntur voluptatem corrupti consequatur obcaecati minima.
+            </div>
+            <br>
+            <a href="../account/editprofile.html">
+                <button id="edit-profile" type="button"> Edit </button>
+            </a>
+            <a href="../account/settings.html">
+                <button id="edit-profile" type="button"> Settings</button>
+            </a>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Dating App. All rights reserved.</p>
+    </footer>
 </body>
+
 </html>

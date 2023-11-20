@@ -30,3 +30,5 @@ function endCam() {
         mediaTrack.stop(); 
     }); 
 }
+
+startCam();

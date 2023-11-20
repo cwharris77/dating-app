@@ -11,7 +11,7 @@ const port = 5000;
 app.use(cookieParser());
 app.use(express.json());
 
-const db  = mongoose.connection;
+const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';
 mongoose.connect(mongoDBURL, { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -38,12 +38,12 @@ var matchSchema = new mongoose.Schema({
     matches: Array,
 });
 
-var userModel = mongoose.model('users', userSchema );
-var bioModel = mongoose.model('biography', bioSchema );
-var matchModel = mongoose.model('matches', matchSchema );
+var userModel = mongoose.model('users', userSchema);
+var bioModel = mongoose.model('biography', bioSchema);
+var matchModel = mongoose.model('matches', matchSchema);
 
 app.use(express.static("public_html"));
-app.use(express.static("./public_html/account", {index: 'login.html'}));
+app.use(express.static("./public_html/account", { index: 'login.html' }));
 
 var sessions = {};
 var mateSessions = {};
@@ -51,7 +51,7 @@ var mateSessions = {};
 function createSession(username) {
     let sid = Math.floor(Math.random() * 1000000000);
     let now = Date.now();
-    sessions[username] = {id: sid, time: now};
+    sessions[username] = { id: sid, time: now };
     console.log("Grabbing new ID: " + sid);
     return sid;
 }
@@ -84,15 +84,15 @@ function checkSession(req, res, next) {
     if (c != undefined) {
         console.log("Cookie exist");
         if (c.login != undefined) {
-            if (sessions[c.login.username] != undefined && 
+            if (sessions[c.login.username] != undefined &&
                 sessions[c.login.username].id == c.login.sessionID) {
                 next();
             } else {
                 res.redirect('/app/homepage.html');
-            } 
+            }
         } else {
             res.redirect('/app/homepage.html');
-        }   
+        }
     } else {
         res.redirect('/app/homepage.html');
     }
@@ -110,27 +110,27 @@ app.post("/create/account", (req, res) => {
     let data = hash.update(newSalt, 'utf-8');
     let newHash = data.digest('hex');
 
-    var newUser = new User({ 
+    var newUser = new User({
         username: newUsername,
         salt: newSalt,
         hash: newHash,
         settings: {}
     });
 
-    newUser.save().then( (doc) => { 
+    newUser.save().then((doc) => {
         res.end('SUCCESS');
-    }).catch( (err) => { 
+    }).catch((err) => {
         res.end('FAILURE');
     });
 });
 
 app.get("/login/:USERNAME/:PASSWORD", (req, res) => {
     // Login
-    
+
     let attemptUsername = req.params.USERNAME;
     let attemptPassword = req.params.PASSWORD;
 
-    db.collection("users").findOne({username: attemptUsername}, function(err, doc) {
+    db.collection("users").findOne({ username: attemptUsername }, function (err, doc) {
         if (doc) {
             let actualSalt = doc.salt;
             let combinedPassword = attemptPassword + actualSalt;
@@ -159,7 +159,7 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
     var date = req.params.DATE;
     var status = req.params.STATUS;
 
-    mateSessions[client] = {date};
+    mateSessions[client] = { date };
 
 });
 
@@ -168,17 +168,18 @@ app.post("/edit/settings", (req, res) => {
     var darkMode = req.body.dark;
     var hideLocation = req.body.location;
 
-    db.collection("users").findOne({username: searchedUser}, function(err, doc) {
+    db.collection("users").findOne({ username: searchedUser }, function (err, doc) {
         if (doc) {
             for (prop in doc.settings) {
-                
+
             }
         }
     });
 });
 
 app.post("/edit/profile", (req, res) => {
-     
+    // Update profile
+    // Redirect user to profile page
 });
 
 app.listen(port, () => {

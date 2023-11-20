@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - Your Dating App</title>
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+
+<body>
+    <header>
+        <h1>Your Dating App</h1>
+    </header>
+
+    <main>
+        <section>
+            <!--Get info from server-->
+            <div class="user-header">
+                <label for="name-edit">Name: </label>
+                <input type="text" name="name" id="name-edit">
+                <label for="age-edit">Age: </label>
+                <input type="number" name="age" id="age-edit">
+                <label for="loc-edit">Location</label>
+                <input type="text" name="loc" id="loc-edit">
+                <label for="height-edit">Height: </label>
+                <input type="text" name="height" id="height-edit">
+            </div>
+
+            <div class="user-image">
+                Profile Picture:
+                <input type="file" id="pfp" name="pfp" accept="image/*">
+            </div>
+
+            <h3>About me: </h3>
+
+            <div class="bio">
+                <textarea name="about-me-edit" id="about-me-edit" cols="65" rows="10"></textarea>
+            </div>
+            <br>
+            <button id="submit-profile" type="button"> Submit </button>
+            <a href="../account/profile.html">
+                <button id="cancel-profile" type="button"> Cancel </button>
+            </a>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Dating App. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

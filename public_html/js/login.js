@@ -2,8 +2,6 @@ let logIn = document.getElementById("loginFields");
 let signUp = document.getElementById("signUpFields");
 let loginButton = document.getElementById("loginButton")
 let signUpButton = document.getElementById("signUpButton")
-let loginSubmit = document.getElementById("loginSubmit")
-let signUpSubmit = document.getElementById("signUpSubmit")
 
 function login() {
   let us = document.getElementById('loginEmail').value;
@@ -60,9 +58,6 @@ function showSignUp() {
 
   signUpButton.classList.add("active-button")
   signUpButton.classList.remove("inactive-button")
-
-  loginSubmit.classList.add("hidden")
-  signUpSubmit.classList.remove("hidden")
 }
 
 function showLogin() {
@@ -74,8 +69,5 @@ function showLogin() {
 
   signUpButton.classList.remove("active-button")
   signUpButton.classList.add("inactive-button")
-
-  loginSubmit.classList.remove("hidden")
-  signUpSubmit.classList.add("hidden")
 }
 

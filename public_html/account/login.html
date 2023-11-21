@@ -6,19 +6,20 @@
     <title>Login - Your Dating App</title>
 
     <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../js/login.js"></script>
+    <script defer type="text/javascript" src="../js/login.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/login.css">
+
 </head>
 <body>
-
     <form id="loginForm">
-        <div class="button-container">
-             <button class="form-button" onclick="showSignUp();">Sign Up</button>
-            <button class="form-button" onclick="showLogin();">Login</button>
-        </div>
-        
+    <div class="button-container">
+      <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign Up</button>
+      <button type="button" id="loginButton" class="form-button active-button" onclick="showLogin();">Login</button>
+    </div>
+
+    <div id="loginFields" class="fields">
         <h2>Login</h2>
         <div class="input-container">
             <i class="fa fa-envelope icon"></i>
@@ -31,29 +32,25 @@
         </div>
 
         <a href="" id="forgotPassword">Forgot Password</a>
+    </div>
 
-        <input type="submit" value="Login With Email">
-    </form>
+    <div id="signUpFields" class="hidden fields">
+          <h2>Sign Up</h2>
+      <div class="input-container">
+        <i class="fa fa-envelope icon"></i>
+        <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
+      </div>
 
-    <form id="signUpForm" class="hidden">
-        <div class="button-container">
-             <button class="form-button" onclick="showSignUp();">Sign Up</button>
-             <button class="form-button" onclick="showLogin();">Login</button>
-        </div>
+      <div class="input-container">
+        <i class="fa fa-lock icon"></i>
+        <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
+      </div>
 
-        <h2>Sign Up</h2>
-        <div class="input-container">
-            <i class="fa fa-envelope icon"></i>
-            <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
-        </div>
+      <!-- Additional sign up fields go here -->
+    </div>
 
-        <div class="input-container">
-            <i class="fa fa-lock icon"></i>
-            <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
-        </div>
-
-        <input type="submit" value="Sign Up">
-    </form>
+    <input type="submit" value="Login">
+  </form>
     
     <footer>
         <p>Footer content</p>
@@ -70,3 +67,4 @@
 
 </body>
 </html>
+

@@ -2,9 +2,13 @@
 const mongoose = require('mongoose');
 const express = require('express')
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
+
 const app = express()
 
 const hostname = "127.0.0.1";
+const minute = 5;
+
 //134.209.15.30
 const port = 5000;
 
@@ -61,11 +65,10 @@ function removeSessions() {
     // This will remove a Cookie session after a certain amount of minutes.
     let now = Date.now();
     let emails = Object.keys(sessions);
-    let minutes = 5;
     for (let i = 0; i < emails.length; i++) {
         let last = sessions[emails[i]].time;
         // Once it reaches 5 minutes, it will delete the session in the server array.
-        if (last + 60000 * minutes < now) {
+        if (last + 60000 * minute < now) {
             delete sessions[emails[i]];
         }
     }
@@ -73,10 +76,8 @@ function removeSessions() {
 
 function generateSalt(password) {
     let salt = Math.floor(Math.random() * 1000000000);
-    return password + salt;
+    return salt;
 }
-
-setInterval(removeSessions, 2000);
 
 function checkSession(req, res, next) {
     // This will authenticate and make sure you are login based on your cookie.
@@ -89,60 +90,128 @@ function checkSession(req, res, next) {
                 sessions[c.login.email].id == c.login.sessionID) {
                 next();
             } else {
-                res.redirect('/app/homepage.html');
+                res.redirect('/account/login.html');
             }
         } else {
-            res.redirect('/app/homepage.html');
+            res.redirect('/account/login.html');
         }
     } else {
-        res.redirect('/app/homepage.html');
+        res.redirect('/account/login.html');
     }
 }
 
+setInterval(removeSessions, 2000);
+
+
+app.use("/app/homepage.html", checkSession);
+app.use("/account/profile.html", checkSession);
+app.use("/account/settings.html", checkSession);
+app.use("/account/editprofile.html", checkSession);
+app.use("/app/matching.html", checkSession);
+app.use("/app/video.html", checkSession);
+
 app.post("/create/account", (req, res) => {
     // This creates an account and generates a salt and hash.
-
-    console.log("Creating new account");
-
     let newEmail = req.body.email;
     let newPassword = req.body.password;
 
-    let newSalt = generateSalt(newPassword);
+    db.collection("users").findOne({ email: newEmail }, function (err, doc) {
+        if (!doc) {
+            console.log("Creating new account");
 
-    var hash = crypto.createHash('sha3-256');
-    let data = hash.update(newSalt, 'utf-8');
-    let newHash = data.digest('hex');
+            console.log(newEmail);
+            console.log(newPassword);
 
-    var newUser = new userModel({
-        email: newEmail,
-        salt: newSalt,
-        hash: newHash,
-        settings: {}
+            let newSalt = generateSalt(newPassword);
+
+            var hash = crypto.createHash('sha3-256');
+            var saltAndPass = toString(newPassword) + toString(newSalt);
+            let data = hash.update(saltAndPass, 'utf-8');
+            let newHash = data.digest('hex');
+
+            var newUser = new userModel({
+                email: newEmail,
+                salt: newSalt,
+                hash: newHash,
+                settings: {}
+            });
+
+            var newBio = new bioModel({
+                email: newEmail,
+                name: null,
+                description: null,
+                location: null,
+                age: null,
+                height: null,
+                photo: null,
+                photos: {},
+            });
+
+            var newMatches = new matchModel({
+                email: newEmail,
+                matches: {},
+            });
+    
+            newUser.save().then((doc) => {
+                console.log(doc);
+                newBio.save().then((doc) => {
+                    console.log(doc);
+                    newMatches.save().then((doc) => {
+                        console.log(doc);
+                        let sid = createSession(newEmail);
+                        res.cookie("login", 
+                        {email: newEmail, sessionID: sid}, 
+                        {maxAge: 60000 * minute}); // 60000 is 1 minute
+                        res.end("true");
+                    });
+                    
+                });
+                
+            }).catch((err) => {
+                console.log("Error!");
+                console.log(err);
+                res.end("false");
+            });
+        } else {
+            res.end("already exist");
+        }
     });
+    
+});
 
-    var newBio = new bioModel({
-        email: newEmail,
-        name: null,
-        description: null,
-        location: null,
-        age: null,
-        height: null,
-        photo: null,
-        photos: {},
-    });
+app.get("/get/user/:EMAIL", (req, res) => {
+    let c = req.cookies;
+    let usedEmail = c.login.email;
 
-    var newMatches = new matchModel({
-        email: newEmail,
-        matches: {},
-    });
+    if (req.params.EMAIL != "CurrentUser") {
+        console.log("Current client");
+        usedEmail = req.params.EMAIL;
+    }
 
-    newUser.save().then((doc) => {
-        newBio.save();
-        newMatches.save();
-        res.end(true);
-    }).catch((err) => {
-        res.end(false);
+    console.log("Looking for user");
+    
+    db.collection("biographies").findOne({email: usedEmail}, function (err, doc) {
+        if (doc) {
+
+            console.log("Data was found");
+
+            let data = {
+                name: doc.name,
+                age: doc.age,
+                height: doc.height,
+                bio: doc.description,
+                location: doc.location,
+            }
+
+            console.log("Sending data");
+
+            console.log(JSON.stringify(data));
+            res.end(JSON.stringify(data));
+        } else {
+            res.end(false);
+        }
     });
+    
 });
 
 app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
@@ -161,16 +230,18 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
             let generatedHash = data.digest('hex');
 
             if (generatedHash == doc.hash) {
-                createSession(attemptEmail);
-
-                res.end(true);
+                let sid = createSession(attemptEmail);
+                res.cookie("login", 
+                {email: attemptEmail, sessionID: sid}, 
+                {maxAge: 60000 * minute}); // 60000 is 1 minute
+                res.end("true");
             } else {
                 // Password is incorrect
-                res.end(false)
+                res.end("false")
             }
         } else {
             // Email doesn't exist
-            res.end(false);
+            res.end("false");
         }
     });
 });
@@ -201,6 +272,46 @@ app.post("/edit/settings", (req, res) => {
 app.post("/edit/profile", (req, res) => {
     // Update profile
     // Redirect user to profile page
+    
+    let newName = req.body.name;
+    let newAge = req.body.age;
+    let newLocation = req.body.location;
+    let newHeight = req.body.height;
+    let newBio = req.body.bio;
+    let newPhoto = req.body.photo;
+
+    let c = req.cookies;
+
+    let currentEmail = c.login;
+
+    let updateDoc = db.collection("biographies").updateOne({email: c.login.email}, { $set: 
+        {
+            name: newName,
+            age: newAge,
+            location: newLocation,
+            height: newHeight,
+            description: newBio,
+            photo: newPhoto,
+        }
+        
+    });
+    updateDoc.then((doc) => {
+        // Success when updating
+
+        if (doc) {
+            console.log("Updated!");
+            res.end("true");
+        }
+        
+    }).catch((err) => {
+        // Error while updating
+        alert(err);
+        res.end("false");
+    });
+    
+           
+            
+     
 });
 
 app.listen(port, () => {

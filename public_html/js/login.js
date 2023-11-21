@@ -3,8 +3,6 @@ function login() {
   let us = document.getElementById('loginEmail').value;
   let pw = document.getElementById('loginPassword').value;
 
-  //console.log("Login");
-
   let data = {email: us, password: pw};
   console.log(data)
   let p = fetch(`/login/${us}/${pw}`, {
@@ -25,11 +23,11 @@ function login() {
 }
 
 function createAccount() {
-  let us = document.getElementById('usernameCreate').value;
-  let pw = document.getElementById('passwordCreate').value;
+  let us = document.getElementById('signUpEmail').value;
+  let pw = document.getElementById('signUpPassword').value;
 
-  //console.log(us);
-  //console.log(pw);
+  console.log(us);
+  console.log(pw);
 
   let p = fetch('/create/account', {
   	method: 'POST',
@@ -39,7 +37,14 @@ function createAccount() {
   p.then((response) => {
     return response.text();
   }).then((text) => { 
-    alert(text);
+    if (text.startsWith('true')) {
+      // successful sign up
+    	window.location.href = '/account/editprofile.html'; 
+    } else {
+      alert("Account already exist!");
+    }
+  }).catch((err) => {
+    alert(err);
   });
 }
 

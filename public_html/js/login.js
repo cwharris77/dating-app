@@ -1,5 +1,9 @@
-function login() {
+let logIn = document.getElementById("loginFields");
+let signUp = document.getElementById("signUpFields");
+let loginButton = document.getElementById("loginButton")
+let signUpButton = document.getElementById("signUpButton")
 
+function login() {
   let us = document.getElementById('loginEmail').value;
   let pw = document.getElementById('loginPassword').value;
 
@@ -26,9 +30,6 @@ function createAccount() {
   let us = document.getElementById('signUpEmail').value;
   let pw = document.getElementById('signUpPassword').value;
 
-  console.log(us);
-  console.log(pw);
-
   let p = fetch('/create/account', {
   	method: 'POST',
   	body: JSON.stringify({email: us, password: pw}),
@@ -49,20 +50,24 @@ function createAccount() {
 }
 
 function showSignUp() {
-	let signUP = document.getElementById("signUpForm");
-	let login = document.getElementById("loginForm");
+	logIn.classList.add("hidden")
+	signUp.classList.remove("hidden")
 
-	login.classList.add("hidden")
-	signUP.classList.remove("hidden")
+  loginButton.classList.remove("active-button")
+  loginButton.classList.add("inactive-button")
+
+  signUpButton.classList.add("active-button")
+  signUpButton.classList.remove("inactive-button")
 }
 
 function showLogin() {
-	let signUp = document.getElementById("signUpForm");
-	let login = document.getElementById("loginForm");
-
 	signUp.classList.add("hidden")
-	login.classList.remove("hidden")
+	logIn.classList.remove("hidden")
+
+  loginButton.classList.add("active-button")
+  loginButton.classList.remove("inactive-button")
+
+  signUpButton.classList.remove("active-button")
+  signUpButton.classList.add("inactive-button")
 }
-
-
 

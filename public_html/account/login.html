@@ -63,6 +63,13 @@
 
         login();
     });
+    document.getElementById('signUpForm').addEventListener('submit', function(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        createAccount();
+    });
+    
     </script>
 
 </body>

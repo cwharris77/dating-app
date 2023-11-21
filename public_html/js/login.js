@@ -4,11 +4,11 @@ function login() {
   let pw = document.getElementById('loginPassword').value;
 
   let data = {email: us, password: pw};
-  console.log(data)
+  //console.log(data)
   let p = fetch(`/login/${us}/${pw}`, {
-    method: 'POST', 
-    body: JSON.stringify(data),
-    headers: {"Content-Type": "application/json"}
+    method: 'GET', 
+    //body: JSON.stringify(data),
+    //headers: {"Content-Type": "application/json"}
   });
   p.then((response) => {
     return response.text();

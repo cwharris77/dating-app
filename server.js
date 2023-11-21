@@ -103,12 +103,12 @@ function checkSession(req, res, next) {
 setInterval(removeSessions, 2000);
 
 
-app.use("/app/homepage.html", checkSession);
+/*app.use("/app/homepage.html", checkSession);
 app.use("/account/profile.html", checkSession);
 app.use("/account/settings.html", checkSession);
 app.use("/account/editprofile.html", checkSession);
 app.use("/app/matching.html", checkSession);
-app.use("/app/video.html", checkSession);
+app.use("/app/video.html", checkSession);*/
 
 app.post("/create/account", (req, res) => {
     // This creates an account and generates a salt and hash.
@@ -125,7 +125,10 @@ app.post("/create/account", (req, res) => {
             let newSalt = generateSalt(newPassword);
 
             var hash = crypto.createHash('sha3-256');
-            var saltAndPass = toString(newPassword) + toString(newSalt);
+            var combinedPassword = newPassword + newSalt.toString();
+            console.log(combinedPassword);
+            
+            var saltAndPass = combinedPassword;
             let data = hash.update(saltAndPass, 'utf-8');
             let newHash = data.digest('hex');
 
@@ -220,14 +223,24 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     let attemptEmail = req.params.EMAIL;
     let attemptPassword = req.params.PASSWORD;
 
+    
+
     db.collection("users").findOne({ email: attemptEmail }, function (err, doc) {
         if (doc) {
+
+            console.log("Found account");
+
             let actualSalt = doc.salt;
             let combinedPassword = attemptPassword + actualSalt;
+
+            console.log(combinedPassword);
 
             var hash = crypto.createHash('sha3-256');
             let data = hash.update(combinedPassword, 'utf-8');
             let generatedHash = data.digest('hex');
+
+            console.log(generatedHash);
+            console.log(doc.hash);
 
             if (generatedHash == doc.hash) {
                 let sid = createSession(attemptEmail);

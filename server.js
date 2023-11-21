@@ -17,14 +17,15 @@ mongoose.connect(mongoDBURL, { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var userSchema = new mongoose.Schema({
-    username: String,
+    email: String,
     hash: String,
     salt: Number,
     settings: Array
 });
 
 var bioSchema = new mongoose.Schema({
-    username: String,
+    email: String,
+    name: String,
     description: String,
     location: String,
     age: Number,
@@ -34,7 +35,7 @@ var bioSchema = new mongoose.Schema({
 });
 
 var matchSchema = new mongoose.Schema({
-    username: String,
+    email: String,
     matches: Array,
 });
 
@@ -48,10 +49,10 @@ app.use(express.static("./public_html/account", { index: 'login.html' }));
 var sessions = {};
 var mateSessions = {};
 
-function createSession(username) {
+function createSession(email) {
     let sid = Math.floor(Math.random() * 1000000000);
     let now = Date.now();
-    sessions[username] = { id: sid, time: now };
+    sessions[email] = { id: sid, time: now };
     console.log("Grabbing new ID: " + sid);
     return sid;
 }
@@ -59,13 +60,13 @@ function createSession(username) {
 function removeSessions() {
     // This will remove a Cookie session after a certain amount of minutes.
     let now = Date.now();
-    let usernames = Object.keys(sessions);
+    let emails = Object.keys(sessions);
     let minutes = 5;
-    for (let i = 0; i < usernames.length; i++) {
-        let last = sessions[usernames[i]].time;
+    for (let i = 0; i < emails.length; i++) {
+        let last = sessions[emails[i]].time;
         // Once it reaches 5 minutes, it will delete the session in the server array.
         if (last + 60000 * minutes < now) {
-            delete sessions[usernames[i]];
+            delete sessions[emails[i]];
         }
     }
 }
@@ -84,8 +85,8 @@ function checkSession(req, res, next) {
     if (c != undefined) {
         console.log("Cookie exist");
         if (c.login != undefined) {
-            if (sessions[c.login.username] != undefined &&
-                sessions[c.login.username].id == c.login.sessionID) {
+            if (sessions[c.login.email] != undefined &&
+                sessions[c.login.email].id == c.login.sessionID) {
                 next();
             } else {
                 res.redirect('/app/homepage.html');
@@ -101,7 +102,9 @@ function checkSession(req, res, next) {
 app.post("/create/account", (req, res) => {
     // This creates an account and generates a salt and hash.
 
-    let newUsername = req.body.username;
+    console.log("Creating new account");
+
+    let newEmail = req.body.email;
     let newPassword = req.body.password;
 
     let newSalt = generateSalt(newPassword);
@@ -110,27 +113,45 @@ app.post("/create/account", (req, res) => {
     let data = hash.update(newSalt, 'utf-8');
     let newHash = data.digest('hex');
 
-    var newUser = new User({
-        username: newUsername,
+    var newUser = new userModel({
+        email: newEmail,
         salt: newSalt,
         hash: newHash,
         settings: {}
     });
 
+    var newBio = new bioModel({
+        email: newEmail,
+        name: null,
+        description: null,
+        location: null,
+        age: null,
+        height: null,
+        photo: null,
+        photos: {},
+    });
+
+    var newMatches = new matchModel({
+        email: newEmail,
+        matches: {},
+    });
+
     newUser.save().then((doc) => {
-        res.end('SUCCESS');
+        newBio.save();
+        newMatches.save();
+        res.end(true);
     }).catch((err) => {
-        res.end('FAILURE');
+        res.end(false);
     });
 });
 
-app.get("/login/:USERNAME/:PASSWORD", (req, res) => {
+app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     // Login
 
-    let attemptUsername = req.params.USERNAME;
+    let attemptEmail = req.params.EMAIL;
     let attemptPassword = req.params.PASSWORD;
 
-    db.collection("users").findOne({ username: attemptUsername }, function (err, doc) {
+    db.collection("users").findOne({ email: attemptEmail }, function (err, doc) {
         if (doc) {
             let actualSalt = doc.salt;
             let combinedPassword = attemptPassword + actualSalt;
@@ -140,7 +161,7 @@ app.get("/login/:USERNAME/:PASSWORD", (req, res) => {
             let generatedHash = data.digest('hex');
 
             if (generatedHash == doc.hash) {
-                createSession(attemptUsername);
+                createSession(attemptEmail);
 
                 res.end(true);
             } else {
@@ -148,7 +169,7 @@ app.get("/login/:USERNAME/:PASSWORD", (req, res) => {
                 res.end(false)
             }
         } else {
-            // Username doesn't exist
+            // Email doesn't exist
             res.end(false);
         }
     });
@@ -164,11 +185,11 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
 });
 
 app.post("/edit/settings", (req, res) => {
-    var searchedUser = req.body.username;
+    var searchedUser = req.body.email;
     var darkMode = req.body.dark;
     var hideLocation = req.body.location;
 
-    db.collection("users").findOne({ username: searchedUser }, function (err, doc) {
+    db.collection("users").findOne({ email: searchedUser }, function (err, doc) {
         if (doc) {
             for (prop in doc.settings) {
 

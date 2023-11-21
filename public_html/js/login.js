@@ -6,6 +6,7 @@ let loginSubmit = document.getElementById("loginSubmit")
 let signUpSubmit = document.getElementById("signUpSubmit")
 
 function login() {
+  console.log("logging in")
   let us = document.getElementById('loginEmail').value;
   let pw = document.getElementById('loginPassword').value;
 
@@ -29,6 +30,7 @@ function login() {
 }
 
 function createAccount() {
+  console.log("got here")
   let us = document.getElementById('signUpEmail').value;
   let pw = document.getElementById('signUpPassword').value;
 

@@ -13,45 +13,51 @@
 
 </head>
 <body>
-    <form id="loginForm">
-    <div class="button-container">
-      <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign Up</button>
-      <button type="button" id="loginButton" class="form-button active-button" onclick="showLogin();">Login</button>
-    </div>
+    <!-- <div id="form-div"> -->
+        <form id="loginForm">
+        <div class="button-container">
+          <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign Up</button>
+          <button type="button" id="loginButton" class="form-button active-button" onclick="showLogin();">Login</button>
+        </div>
 
-    <div id="loginFields" class="fields">
-        <h2>Login</h2>
-        <div class="input-container">
+        <div id="loginFields" class="fields">
+            <h2>Login</h2>
+            <div class="input-container">
+                <i class="fa fa-envelope icon"></i>
+                <input type="email" id="loginEmail" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-container">
+                <i class="fa fa-lock icon"></i>
+                <input type="password" id="loginPassword" name="password" placeholder="Password" required>
+            </div>
+
+            <a href="" id="forgotPassword">Forgot Password</a>
+        </div>
+
+        <input type="submit" id="loginSubmit" value="Login">
+
+      </form>
+
+      <form id="signUpForm">
+          <div id="signUpFields" class="fields">
+              <h2>Sign Up</h2>
+          <div class="input-container">
             <i class="fa fa-envelope icon"></i>
-            <input type="email" id="loginEmail" name="email" placeholder="Email" required>
-        </div>
+            <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
+          </div>
 
-        <div class="input-container">
+          <div class="input-container">
             <i class="fa fa-lock icon"></i>
-            <input type="password" id="loginPassword" name="password" placeholder="Password" required>
+            <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
+          </div>
+
+          <!-- Additional sign up fields go here -->
         </div>
 
-        <a href="" id="forgotPassword">Forgot Password</a>
-    </div>
-
-    <div id="signUpFields" class="hidden fields">
-          <h2>Sign Up</h2>
-      <div class="input-container">
-        <i class="fa fa-envelope icon"></i>
-        <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
-      </div>
-
-      <div class="input-container">
-        <i class="fa fa-lock icon"></i>
-        <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
-      </div>
-
-      <!-- Additional sign up fields go here -->
-    </div>
-
-    <input type="submit" id="loginSubmit" value="Login">
-    <input type="submit" id="signUpSubmit" class="hidden" value="Sign Up">
-  </form>
+        <input type="submit" id="signUpSubmit" class="" value="Sign Up">
+      </form>
+    <!-- </div> -->
     
     <footer>
         <p>Footer content</p>
@@ -59,14 +65,18 @@
 
     <script type="text/javascript">
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-        // Prevent the default form submission
-        event.preventDefault();
+            // Prevent the default form submission
+            event.preventDefault();
 
-        let submit = document.getElementById("loginSubmit");
+            login();
+        });
 
-        // If the login button is hidden the sign up page is shown and that function should be called on submission
-        const result = submit.classList.contains("hidden") ? createAccount() : login()
-    });
+        document.getElementById('signUpForm').addEventListener('submit', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            createAccount()
+        });
     </script>
 
 </body>

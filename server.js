@@ -103,12 +103,12 @@ function checkSession(req, res, next) {
 setInterval(removeSessions, 2000);
 
 
-/*app.use("/app/homepage.html", checkSession);
+app.use("/app/homepage.html", checkSession);
 app.use("/account/profile.html", checkSession);
 app.use("/account/settings.html", checkSession);
 app.use("/account/editprofile.html", checkSession);
 app.use("/app/matching.html", checkSession);
-app.use("/app/video.html", checkSession);*/
+app.use("/app/video.html", checkSession);
 
 app.post("/create/account", (req, res) => {
     // This creates an account and generates a salt and hash.

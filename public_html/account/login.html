@@ -49,7 +49,8 @@
       <!-- Additional sign up fields go here -->
     </div>
 
-    <input type="submit" value="Login">
+    <input type="submit" id="loginSubmit" value="Login">
+    <input type="submit" id="signUpSubmit" class="hidden" value="Sign Up">
   </form>
     
     <footer>
@@ -61,15 +62,11 @@
         // Prevent the default form submission
         event.preventDefault();
 
-        login();
-    });
-    document.getElementById('signUpForm').addEventListener('submit', function(event) {
-        // Prevent the default form submission
-        event.preventDefault();
+        let submit = document.getElementById("loginSubmit");
 
-        createAccount();
+        // If the login button is hidden the sign up page is shown and that function should be called on submission
+        const result = submit.classList.contains("hidden") ? createAccount() : login()
     });
-    
     </script>
 
 </body>

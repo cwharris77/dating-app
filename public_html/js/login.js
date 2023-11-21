@@ -3,7 +3,7 @@ function login() {
   let us = document.getElementById('loginEmail').value;
   let pw = document.getElementById('loginPassword').value;
 
-  let data = {username: us, password: pw};
+  let data = {email: us, password: pw};
   console.log(data)
   let p = fetch(`/login/${us}/${pw}`, {
     method: 'POST', 
@@ -23,18 +23,28 @@ function login() {
 }
 
 function createAccount() {
-  let us = document.getElementById('usernameCreate').value;
-  let pw = document.getElementById('passwordCreate').value;
+  let us = document.getElementById('signUpEmail').value;
+  let pw = document.getElementById('signUpPassword').value;
+
+  console.log(us);
+  console.log(pw);
 
   let p = fetch('/create/account', {
   	method: 'POST',
-  	body: JSON.stringify({username: us, password: pw}),
+  	body: JSON.stringify({email: us, password: pw}),
   	headers: {"Content-Type": "application/json"}
   });
   p.then((response) => {
     return response.text();
   }).then((text) => { 
-    alert(text);
+    if (text.startsWith('true')) {
+      // successful sign up
+    	window.location.href = '/account/editprofile.html'; 
+    } else {
+      alert("Account already exist!");
+    }
+  }).catch((err) => {
+    alert(err);
   });
 }
 

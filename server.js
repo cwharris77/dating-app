@@ -10,7 +10,7 @@ const hostname = "127.0.0.1";
 const minute = 5;
 
 //134.209.15.30
-const port = 5000;
+const port = 3000;
 
 app.use(cookieParser());
 app.use(express.json());

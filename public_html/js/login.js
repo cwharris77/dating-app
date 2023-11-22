@@ -1,5 +1,5 @@
-let logIn = document.getElementById("loginFields");
-let signUp = document.getElementById("signUpFields");
+let logIn = document.getElementById("loginForm");
+let signUp = document.getElementById("signUpForm");
 let loginButton = document.getElementById("loginButton")
 let signUpButton = document.getElementById("signUpButton")
 let loginSubmit = document.getElementById("loginSubmit")

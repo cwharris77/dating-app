@@ -18,6 +18,7 @@ app.use(express.json());
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';
 mongoose.connect(mongoDBURL, { useNewUrlParser: true });
+
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var userSchema = new mongoose.Schema({

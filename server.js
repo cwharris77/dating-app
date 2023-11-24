@@ -224,8 +224,6 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     let attemptEmail = req.params.EMAIL;
     let attemptPassword = req.params.PASSWORD;
 
-    
-
     db.collection("users").findOne({ email: attemptEmail }, function (err, doc) {
         if (doc) {
 
@@ -270,15 +268,31 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
 });
 
 app.post("/edit/settings", (req, res) => {
-    var searchedUser = req.body.email;
-    var darkMode = req.body.dark;
-    var hideLocation = req.body.location;
+    // Update settings
+    let c = req.cookies;
+    var newInterest = req.body.dark;
+    var newNotificationSettings = req.body.notif;
 
-    db.collection("users").findOne({ email: searchedUser }, function (err, doc) {
+    db.collection("users").findOne({ email: c.login.email }, function (err, doc) {
         if (doc) {
-            for (prop in doc.settings) {
+            let newSettings = {
+                interest: newInterest,
+                notification: newNotificationSettings
+            };
 
-            }
+            let updateDoc = db.collection("users").updateOne({email: c.login.email}, { $set: 
+                {
+                    settings: newSettings,
+                }
+            });
+            updateDoc.then((doc) => {
+                // Success when updating
+                if (doc) {
+                    console.log("Updated settings!");
+                    res.end("true");
+                }
+            });
+                
         }
     });
 });
@@ -295,8 +309,6 @@ app.post("/edit/profile", (req, res) => {
     let newPhoto = req.body.photo;
 
     let c = req.cookies;
-
-    let currentEmail = c.login;
 
     let updateDoc = db.collection("biographies").updateOne({email: c.login.email}, { $set: 
         {
@@ -322,10 +334,11 @@ app.post("/edit/profile", (req, res) => {
         alert(err);
         res.end("false");
     });
+      
+});
+
+app.post('/upload', (req, res) => {
     
-           
-            
-     
 });
 
 app.listen(port, () => {

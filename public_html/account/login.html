@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Your Dating App</title>
+    <title>Login - LoveMingle</title>
 
     <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
     <script defer type="text/javascript" src="../js/login.js"></script>
@@ -12,11 +13,14 @@
     <link rel="stylesheet" type="text/css" href="../css/login.css">
 
 </head>
+
 <body>
     <div id="form-div">
         <div class="button-container">
-          <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign Up</button>
-          <button type="button" id="loginButton" class="form-button active-button" onclick="showLogin();">Login</button>
+            <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign
+                Up</button>
+            <button type="button" id="loginButton" class="form-button active-button"
+                onclick="showLogin();">Login</button>
         </div>
 
         <form id="loginForm">
@@ -40,39 +44,39 @@
 
         </form>
 
-          <form id="signUpForm" class="hidden">
-              <div id="signUpFields" class="fields">
-                  <h2>Sign Up</h2>
-              <div class="input-container">
-                <i class="fa fa-envelope icon"></i>
-                <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
-              </div>
+        <form id="signUpForm" class="hidden">
+            <div id="signUpFields" class="fields">
+                <h2>Sign Up</h2>
+                <div class="input-container">
+                    <i class="fa fa-envelope icon"></i>
+                    <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
+                </div>
 
-              <div class="input-container">
-                <i class="fa fa-lock icon"></i>
-                <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
-              </div>
+                <div class="input-container">
+                    <i class="fa fa-lock icon"></i>
+                    <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
+                </div>
 
-              <!-- Additional sign up fields go here -->
+                <!-- Additional sign up fields go here -->
             </div>
 
             <input type="submit" id="signUpSubmit" class="" value="Sign Up">
-          </form>
+        </form>
     </div>
-    
+
     <footer>
-        <p>Footer content</p>
+        <p>&copy; 2023 LoveMingle. All rights reserved.</p>
     </footer>
 
     <script type="text/javascript">
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
             // Prevent the default form submission
             event.preventDefault();
 
             login();
         });
 
-        document.getElementById('signUpForm').addEventListener('submit', function(event) {
+        document.getElementById('signUpForm').addEventListener('submit', function (event) {
             // Prevent the default form submission
             event.preventDefault();
 
@@ -81,5 +85,5 @@
     </script>
 
 </body>
-</html>
 
+</html>

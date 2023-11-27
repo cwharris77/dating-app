@@ -16,17 +16,17 @@
             <div id="pushNotifications">
                 <h3>Push Notifications</h3>
         
-                <input type="checkbox" id="allowAll" name="allowAll" checked>
+                <input type="checkbox" id="allowAll" name="notif" checked>
                 <label for="allowAll">
                     Allow all notifications
                 </label>
         
-                <input type="checkbox" id="newLikes" name="newLikes">
+                <input type="checkbox" id="newLikes" name="notif">
                 <label for="newLikes">
                     New Likes
                 </label>
         
-                <input type="checkbox" id="newMatches" name="newMatches">
+                <input type="checkbox" id="newMatches" name="notif">
                 <label for="newMatches">
                     New Matches
                 </label>
@@ -57,6 +57,8 @@
                     </label>
                 </div>
             </div> 
+            
+            <button type="button" onclick="saveSettings()">Save Settings</button>
         </form>
         
         <form action="" id="accountSettings">
@@ -71,5 +73,7 @@
     <footer>
         <p>© 2023 Dating App. All rights reserved.</p>
     </footer>
+    
+    <script src="../js/settings.js"></script>
 </body>
 </html>

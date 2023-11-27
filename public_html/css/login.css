@@ -6,7 +6,8 @@ body {
 }
 
 /* Form Styles */
-form {
+
+#form-div {
 	display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,6 +21,24 @@ form {
 	background-color: white;
 
 	border-radius: 20px;
+}
+
+form {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+
+	width: 100%;
+
+	background-color: white;
+
+	border-radius: 20px;
+}
+
+.fields {
+	width: 100%;
+
+	text-align: center;
 }
 
 .hidden {
@@ -41,10 +60,7 @@ form {
 	border-radius: 0px;
 	font-size: 120%;
 
-	background-color: white;
 	color: red;
-
-	border-top: 4px solid #ffebee;
 }
 
 .form-button:hover {
@@ -53,7 +69,13 @@ form {
 
 .inactive-button {
 	border: none;
-	background-color: lightgray;
+	background-color: #FAD8D6;
+}
+
+.active-button {
+	background-color: white;
+
+	border-top: 4px solid #ffebee;
 }
 
 
@@ -70,9 +92,8 @@ i {
 }
 
 /* Style the input to have padding on the left to make room for the icon */
-input {
+input[type="email"], input[type="password"] {
     padding-left: 30px; /* Adjust the left padding to match the icon width */
-    width: 60%;
 }
 
 input:focus {
@@ -93,6 +114,8 @@ input[type="submit"] {
 	font-size: 10pt;
 
 	margin-top: 30px;
+
+	text-align: center;
 }
 
 footer {
@@ -110,6 +133,3 @@ p {
 	margin-left: 50%;
 
 }
-
-
-

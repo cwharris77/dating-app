@@ -1,32 +1,31 @@
-var nameElement = document.getElementById("name");
-var age = document.getElementById("age");
-var location = document.getElementById("location");
-var height = document.getElementById("height");
-var bio = document.getElementById("bio");
-
 function getUserInfo() {
+    var nameElement = document.getElementById("name");
+    var age = document.getElementById("age");
+    var location = document.getElementById("location");
+    var height = document.getElementById("height");
+    var bio = document.getElementById("bio");
 
-    console.log("Test");
 
-
-    fetch(`/get/user/CurrentUser`).then((result) =>{
+    fetch(`/get/user/${"CurrentUser"}`).then((result) =>{
         if (result) {
+           
+            result.json().then((data) => {
 
+                nameElement.innerText = data.name;
+                age.innerText = data.age;
+                height.innerText = data.height;
+                bio.innerText = data.bio;
+                location.innerText = data.location;
+            });
             
-            let dataSheet = JSON.parse(result);
-
-            nameElement.innerText = dataSheet.name;
-            age.innerText = dataSheet.age;
-            height.innerText = dataSheet.height;
-            bio.innerText = dataSheet.bio;
-
-            console.log("Success!");
+            
         } else {
-            console.log("Failure");
+            alert("Failed to load profile");
         }
     });
 }
 
-console.log("Firing!");
+setTimeout(getUserInfo, 10);
 
-getUserInfo();
+
+

@@ -1,11 +1,15 @@
 const webcamElement = document.getElementById('webcam');
 const canvasElement = document.getElementById('canvas');
+const webcamButton = document.getElementById("turnOn");
+const endWebcamButton = document.getElementById("turnOff");
+
+
 var receivedMediaStream = null;
 
 function startCam() {
     let video = webcamElement;
     let mediaDevices = navigator.mediaDevices;
-    video.muted = false;
+    video.muted = true;
 
     mediaDevices
     .getUserMedia({
@@ -31,4 +35,6 @@ function endCam() {
     }); 
 }
 
-startCam();
+webcamButton.onclick = startCam;
+endWebcamButton.onclick = endCam;
+

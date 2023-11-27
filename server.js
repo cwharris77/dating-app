@@ -10,7 +10,7 @@ const hostname = "127.0.0.1";
 const minute = 5;
 
 //134.209.15.30
-const port = 5000;
+const port = 3000;
 
 app.use(cookieParser());
 app.use(express.json());
@@ -18,6 +18,7 @@ app.use(express.json());
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';
 mongoose.connect(mongoDBURL, { useNewUrlParser: true });
+
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var userSchema = new mongoose.Schema({
@@ -125,7 +126,10 @@ app.post("/create/account", (req, res) => {
             let newSalt = generateSalt(newPassword);
 
             var hash = crypto.createHash('sha3-256');
-            var saltAndPass = toString(newPassword) + toString(newSalt);
+            var combinedPassword = newPassword + newSalt.toString();
+            console.log(combinedPassword);
+            
+            var saltAndPass = combinedPassword;
             let data = hash.update(saltAndPass, 'utf-8');
             let newHash = data.digest('hex');
 
@@ -222,12 +226,20 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
 
     db.collection("users").findOne({ email: attemptEmail }, function (err, doc) {
         if (doc) {
+
+            console.log("Found account");
+
             let actualSalt = doc.salt;
             let combinedPassword = attemptPassword + actualSalt;
+
+            console.log(combinedPassword);
 
             var hash = crypto.createHash('sha3-256');
             let data = hash.update(combinedPassword, 'utf-8');
             let generatedHash = data.digest('hex');
+
+            console.log(generatedHash);
+            console.log(doc.hash);
 
             if (generatedHash == doc.hash) {
                 let sid = createSession(attemptEmail);
@@ -256,15 +268,31 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
 });
 
 app.post("/edit/settings", (req, res) => {
-    var searchedUser = req.body.email;
-    var darkMode = req.body.dark;
-    var hideLocation = req.body.location;
+    // Update settings
+    let c = req.cookies;
+    var newInterest = req.body.dark;
+    var newNotificationSettings = req.body.notif;
 
-    db.collection("users").findOne({ email: searchedUser }, function (err, doc) {
+    db.collection("users").findOne({ email: c.login.email }, function (err, doc) {
         if (doc) {
-            for (prop in doc.settings) {
+            let newSettings = {
+                interest: newInterest,
+                notification: newNotificationSettings
+            };
 
-            }
+            let updateDoc = db.collection("users").updateOne({email: c.login.email}, { $set: 
+                {
+                    settings: newSettings,
+                }
+            });
+            updateDoc.then((doc) => {
+                // Success when updating
+                if (doc) {
+                    console.log("Updated settings!");
+                    res.end("true");
+                }
+            });
+                
         }
     });
 });
@@ -281,8 +309,6 @@ app.post("/edit/profile", (req, res) => {
     let newPhoto = req.body.photo;
 
     let c = req.cookies;
-
-    let currentEmail = c.login;
 
     let updateDoc = db.collection("biographies").updateOne({email: c.login.email}, { $set: 
         {
@@ -308,10 +334,11 @@ app.post("/edit/profile", (req, res) => {
         alert(err);
         res.end("false");
     });
+      
+});
+
+app.post('/upload', (req, res) => {
     
-           
-            
-     
 });
 
 app.listen(port, () => {

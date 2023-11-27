@@ -1,68 +1,101 @@
-function login() {
+// Get references to HTML elements
+let logIn = document.getElementById("loginForm");
+let signUp = document.getElementById("signUpForm");
+let loginButton = document.getElementById("loginButton");
+let signUpButton = document.getElementById("signUpButton");
+let loginSubmit = document.getElementById("loginSubmit");
+let signUpSubmit = document.getElementById("signUpSubmit");
 
+/**
+ * Handles the login functionality.
+ * Retrieves user input, sends a GET request to the server, and redirects upon successful login.
+ */
+function login() {
+  console.log("logging in");
   let us = document.getElementById('loginEmail').value;
   let pw = document.getElementById('loginPassword').value;
 
-  let data = {email: us, password: pw};
-  console.log(data)
-  let p = fetch(`/login/${us}/${pw}`, {
-    method: 'POST', 
-    body: JSON.stringify(data),
-    headers: {"Content-Type": "application/json"}
-  });
+  let data = { email: us, password: pw };
+
+  // send data in the request body
+  // let p = fetch(`/login/${us}/${pw}`, {
+  //   method: 'GET', 
+  //   body: JSON.stringify(data),
+  //   headers: {"Content-Type": "application/json"}
+  // });
+
+  let p = fetch(`/login/${us}/${pw}`, { method: 'GET' });
+
   p.then((response) => {
     return response.text();
   }).then((text) => {
     console.log(text);
     if (text.startsWith('true')) {
-    	window.location.href = '/app/homepage.html'; //?user=' + encodeURIComponent(us);
+      window.location.href = '/app/homepage.html'; //?user=' + encodeURIComponent(us);
     } else {
-    	console.log("attempt failed")
+      console.log("attempt failed");
     }
   });
 }
 
+/**
+ * Handles the account creation functionality.
+ * Retrieves user input, sends a POST request to the server, and redirects upon successful account creation.
+ */
 function createAccount() {
+  console.log("got here");
   let us = document.getElementById('signUpEmail').value;
   let pw = document.getElementById('signUpPassword').value;
 
-  console.log(us);
-  console.log(pw);
-
   let p = fetch('/create/account', {
-  	method: 'POST',
-  	body: JSON.stringify({email: us, password: pw}),
-  	headers: {"Content-Type": "application/json"}
+    method: 'POST',
+    body: JSON.stringify({ email: us, password: pw }),
+    headers: { "Content-Type": "application/json" }
   });
+
   p.then((response) => {
     return response.text();
-  }).then((text) => { 
+  }).then((text) => {
     if (text.startsWith('true')) {
-      // successful sign up
-    	window.location.href = '/account/editprofile.html'; 
+      window.location.href = '/account/editprofile.html';
     } else {
-      alert("Account already exist!");
+      alert("Account already exists!");
     }
   }).catch((err) => {
     alert(err);
   });
 }
 
+/**
+ * Switches the view to the sign-up form.
+ */
 function showSignUp() {
-	let signUP = document.getElementById("signUpForm");
-	let login = document.getElementById("loginForm");
+  logIn.classList.add("hidden");
+  signUp.classList.remove("hidden");
 
-	login.classList.add("hidden")
-	signUP.classList.remove("hidden")
+  loginButton.classList.remove("active-button");
+  loginButton.classList.add("inactive-button");
+
+  signUpButton.classList.add("active-button");
+  signUpButton.classList.remove("inactive-button");
+
+  loginSubmit.classList.add("hidden");
+  signUpSubmit.classList.remove("hidden");
 }
 
+/**
+ * Switches the view to the login form.
+ */
 function showLogin() {
-	let signUp = document.getElementById("signUpForm");
-	let login = document.getElementById("loginForm");
+  signUp.classList.add("hidden");
+  logIn.classList.remove("hidden");
 
-	signUp.classList.add("hidden")
-	login.classList.remove("hidden")
+  loginButton.classList.add("active-button");
+  loginButton.classList.remove("inactive-button");
+
+  signUpButton.classList.remove("active-button");
+  signUpButton.classList.add("inactive-button");
+
+  loginSubmit.classList.remove("hidden");
+  signUpSubmit.classList.add("hidden");
 }
-
-
-

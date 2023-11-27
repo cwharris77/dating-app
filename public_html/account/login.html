@@ -6,54 +6,59 @@
     <title>Login - Your Dating App</title>
 
     <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../js/login.js"></script>
+    <script defer type="text/javascript" src="../js/login.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/login.css">
+
 </head>
 <body>
-
-    <form id="loginForm">
+    <div id="form-div">
         <div class="button-container">
-             <button class="form-button" onclick="showSignUp();">Sign Up</button>
-            <button class="form-button" onclick="showLogin();">Login</button>
-        </div>
-        
-        <h2>Login</h2>
-        <div class="input-container">
-            <i class="fa fa-envelope icon"></i>
-            <input type="email" id="loginEmail" name="email" placeholder="Email" required>
+          <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign Up</button>
+          <button type="button" id="loginButton" class="form-button active-button" onclick="showLogin();">Login</button>
         </div>
 
-        <div class="input-container">
-            <i class="fa fa-lock icon"></i>
-            <input type="password" id="loginPassword" name="password" placeholder="Password" required>
-        </div>
+        <form id="loginForm">
 
-        <a href="" id="forgotPassword">Forgot Password</a>
+            <div id="loginFields" class="fields">
+                <h2>Login</h2>
+                <div class="input-container">
+                    <i class="fa fa-envelope icon"></i>
+                    <input type="email" id="loginEmail" name="email" placeholder="Email" required>
+                </div>
 
-        <input type="submit" value="Login With Email">
-    </form>
+                <div class="input-container">
+                    <i class="fa fa-lock icon"></i>
+                    <input type="password" id="loginPassword" name="password" placeholder="Password" required>
+                </div>
 
-    <form id="signUpForm" class="hidden">
-        <div class="button-container">
-             <button class="form-button" onclick="showSignUp();">Sign Up</button>
-             <button class="form-button" onclick="showLogin();">Login</button>
-        </div>
+                <a href="" id="forgotPassword">Forgot Password</a>
+            </div>
 
-        <h2>Sign Up</h2>
-        <div class="input-container">
-            <i class="fa fa-envelope icon"></i>
-            <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
-        </div>
+            <input type="submit" id="loginSubmit" value="Login">
 
-        <div class="input-container">
-            <i class="fa fa-lock icon"></i>
-            <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
-        </div>
+        </form>
 
-        <input type="submit" value="Sign Up">
-    </form>
+          <form id="signUpForm" class="hidden">
+              <div id="signUpFields" class="fields">
+                  <h2>Sign Up</h2>
+              <div class="input-container">
+                <i class="fa fa-envelope icon"></i>
+                <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
+              </div>
+
+              <div class="input-container">
+                <i class="fa fa-lock icon"></i>
+                <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
+              </div>
+
+              <!-- Additional sign up fields go here -->
+            </div>
+
+            <input type="submit" id="signUpSubmit" class="" value="Sign Up">
+          </form>
+    </div>
     
     <footer>
         <p>Footer content</p>
@@ -61,19 +66,20 @@
 
     <script type="text/javascript">
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-        // Prevent the default form submission
-        event.preventDefault();
+            // Prevent the default form submission
+            event.preventDefault();
 
-        login();
-    });
-    document.getElementById('signUpForm').addEventListener('submit', function(event) {
-        // Prevent the default form submission
-        event.preventDefault();
+            login();
+        });
 
-        createAccount();
-    });
-    
+        document.getElementById('signUpForm').addEventListener('submit', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            createAccount()
+        });
     </script>
 
 </body>
 </html>
+

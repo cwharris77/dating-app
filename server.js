@@ -128,7 +128,7 @@ app.post("/create/account", (req, res) => {
             var hash = crypto.createHash('sha3-256');
             var combinedPassword = newPassword + newSalt.toString();
             console.log(combinedPassword);
-            
+
             var saltAndPass = combinedPassword;
             let data = hash.update(saltAndPass, 'utf-8');
             let newHash = data.digest('hex');
@@ -155,7 +155,7 @@ app.post("/create/account", (req, res) => {
                 email: newEmail,
                 matches: {},
             });
-    
+
             newUser.save().then((doc) => {
                 console.log(doc);
                 newBio.save().then((doc) => {
@@ -163,14 +163,14 @@ app.post("/create/account", (req, res) => {
                     newMatches.save().then((doc) => {
                         console.log(doc);
                         let sid = createSession(newEmail);
-                        res.cookie("login", 
-                        {email: newEmail, sessionID: sid}, 
-                        {maxAge: 60000 * minute}); // 60000 is 1 minute
+                        res.cookie("login",
+                            { email: newEmail, sessionID: sid },
+                            { maxAge: 60000 * minute }); // 60000 is 1 minute
                         res.end("true");
                     });
-                    
+
                 });
-                
+
             }).catch((err) => {
                 console.log("Error!");
                 console.log(err);
@@ -180,8 +180,13 @@ app.post("/create/account", (req, res) => {
             res.end("already exist");
         }
     });
-    
+
 });
+app.get("/get/matches/:USER", (req, res) => {
+    // Return Matches
+});
+
+
 
 app.get("/get/user/:EMAIL", (req, res) => {
     let c = req.cookies;
@@ -193,8 +198,8 @@ app.get("/get/user/:EMAIL", (req, res) => {
     }
 
     console.log("Looking for user");
-    
-    db.collection("biographies").findOne({email: usedEmail}, function (err, doc) {
+
+    db.collection("biographies").findOne({ email: usedEmail }, function (err, doc) {
         if (doc) {
 
             console.log("Data was found");
@@ -215,7 +220,7 @@ app.get("/get/user/:EMAIL", (req, res) => {
             res.end(false);
         }
     });
-    
+
 });
 
 app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
@@ -243,9 +248,9 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
 
             if (generatedHash == doc.hash) {
                 let sid = createSession(attemptEmail);
-                res.cookie("login", 
-                {email: attemptEmail, sessionID: sid}, 
-                {maxAge: 60000 * minute}); // 60000 is 1 minute
+                res.cookie("login",
+                    { email: attemptEmail, sessionID: sid },
+                    { maxAge: 60000 * minute }); // 60000 is 1 minute
                 res.end("true");
             } else {
                 // Password is incorrect
@@ -280,7 +285,8 @@ app.post("/edit/settings", (req, res) => {
                 notification: newNotificationSettings
             };
 
-            let updateDoc = db.collection("users").updateOne({email: c.login.email}, { $set: 
+            let updateDoc = db.collection("users").updateOne({ email: c.login.email }, {
+                $set:
                 {
                     settings: newSettings,
                 }
@@ -292,7 +298,7 @@ app.post("/edit/settings", (req, res) => {
                     res.end("true");
                 }
             });
-                
+
         }
     });
 });
@@ -300,7 +306,7 @@ app.post("/edit/settings", (req, res) => {
 app.post("/edit/profile", (req, res) => {
     // Update profile
     // Redirect user to profile page
-    
+
     let newName = req.body.name;
     let newAge = req.body.age;
     let newLocation = req.body.location;
@@ -310,7 +316,8 @@ app.post("/edit/profile", (req, res) => {
 
     let c = req.cookies;
 
-    let updateDoc = db.collection("biographies").updateOne({email: c.login.email}, { $set: 
+    let updateDoc = db.collection("biographies").updateOne({ email: c.login.email }, {
+        $set:
         {
             name: newName,
             age: newAge,
@@ -319,7 +326,7 @@ app.post("/edit/profile", (req, res) => {
             description: newBio,
             photo: newPhoto,
         }
-        
+
     });
     updateDoc.then((doc) => {
         // Success when updating
@@ -328,17 +335,17 @@ app.post("/edit/profile", (req, res) => {
             console.log("Updated!");
             res.end("true");
         }
-        
+
     }).catch((err) => {
         // Error while updating
         alert(err);
         res.end("false");
     });
-      
+
 });
 
 app.post('/upload', (req, res) => {
-    
+
 });
 
 app.listen(port, () => {

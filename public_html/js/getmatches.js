@@ -1,11 +1,10 @@
 const match_container = document.getElementById("profile-container");
 
-function getMatches() {
+function getMatches(currentUser) {
     match_container.innerHTML = "";
-    fetch(`/get/matches/${"CurrentUser"}`).then((result) => {
+    fetch(`/get/matches/${currentUser}`).then((result) => {
         if (result) {
             result.json().then((data) => {
-
                 for (let matches of data) {
                     let profile = "";
                     profile += "<div class=\"user-header\">";

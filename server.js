@@ -183,7 +183,16 @@ app.post("/create/account", (req, res) => {
 
 });
 app.get("/get/matches/:USER", (req, res) => {
-    // Return Matches
+    let user = req.params.USER;
+
+    db.collection("matches").findOne({email: user}, function(err, doc) {
+        if (doc) {
+            res.json(doc.matches)
+        }
+        else {
+            res.json([])
+        }
+    });
 });
 
 

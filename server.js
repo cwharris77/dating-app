@@ -270,7 +270,7 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
 app.post("/edit/settings", (req, res) => {
     // Update settings
     let c = req.cookies;
-    var newInterest = req.body.dark;
+    var newInterest = req.body.preference;
     var newNotificationSettings = req.body.notif;
 
     db.collection("users").findOne({ email: c.login.email }, function (err, doc) {

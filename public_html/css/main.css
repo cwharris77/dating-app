@@ -1,7 +1,9 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #ffebee; /* Light red background */
-    color: #e53935; /* Dark red text color */
+    background-color: #ffebee;
+    /* Light red background */
+    color: #e53935;
+    /* Dark red text color */
     margin: 0;
 }
 
@@ -9,33 +11,41 @@ section {
     max-width: 600px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #fff; /* White background for the settings box */
+    background-color: #fff;
+    /* White background for the settings box */
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Light shadow effect */
 }
 
 h1 {
-    color: #e53935; /* Dark red heading color */
+    color: #e53935;
+    /* Dark red heading color */
 }
 
 label {
     display: block;
     margin: 10px 0;
-    color: #e53935; /* Dark red label color */
+    color: #e53935;
+    /* Dark red label color */
 }
 
-input, select {
+input,
+select {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
     box-sizing: border-box;
-    border: 1px solid #e53935; /* Dark red border for input fields */
+    border: 1px solid #e53935;
+    /* Dark red border for input fields */
     border-radius: 5px;
 }
 
 button {
-    background-color: #e53935; /* Dark red button background */
-    color: #fff; /* White text color */
+    background-color: #e53935;
+    /* Dark red button background */
+    color: #fff;
+    /* White text color */
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -43,7 +53,8 @@ button {
 }
 
 button:hover {
-    background-color: #c62828; /* Darken the button color on hover */
+    background-color: #c62828;
+    /* Darken the button color on hover */
 }
 
 header {
@@ -59,12 +70,12 @@ main {
 }
 
 footer {
-    position: absolute;
+    position: static;
     bottom: 0;
     width: 100%;
 
     background-color: red;
     color: #fff;
-    padding: 10px;
+    padding: 1.5px;
     text-align: center;
 }

@@ -11,6 +11,7 @@ const minute = 5;
 
 //134.209.15.30
 const port = 3000;
+const httpPort = 3001;
 
 const httpServer = require("http").Server(app);
 const io = require("socket.io")(httpServer);
@@ -23,7 +24,7 @@ io.on('connection',function(socket){
     });
 });
 
-httpServer.listen(port, function(){
+httpServer.listen(httpPort, function(){
     console.log("Booting up socket server");
 });
 
@@ -55,14 +56,14 @@ var bioSchema = new mongoose.Schema({
     photos: Array
 });
 
-var matchSchema = new mongoose.Schema({
+var matchHistorySchema = new mongoose.Schema({
     email: String,
     matches: Array,
 });
 
 var userModel = mongoose.model('users', userSchema);
 var bioModel = mongoose.model('biography', bioSchema);
-var matchModel = mongoose.model('matches', matchSchema);
+var matchModel = mongoose.model('matches', matchHistorySchema);
 
 app.use(express.static("public_html"));
 app.use(express.static("./public_html/account", { index: 'login.html' }));
@@ -203,17 +204,53 @@ app.post("/create/account", (req, res) => {
     });
 
 });
-app.get("/get/matches/:USER", (req, res) => {
-    let user = req.params.USER;
 
-    db.collection("matches").findOne({email: user}, function(err, doc) {
+function convertInchesToFeet(number, trueHeight) {
+    if (parseFloat(number) / 12 >= 1) {
+        return convertInchesToFeet(parseFloat(number) - 12, trueHeight+1);
+    } else {
+        return "" + trueHeight + "." + number + " ft";
+    }
+}
+app.get("/get/matches/:USER", (req, res) => {
+
+    console.log("Getting you some MATCHES!");
+
+    let c = req.cookies;
+    let usedEmail = c.login.email;
+
+    if (req.params.USER != "CurrentUser") {
+        usedEmail = req.params.USER;
+    }
+
+    console.log(usedEmail);
+
+    db.collection("biographies").findOne({email: usedEmail}, function(err, doc) {
+        if (doc) {
+            users[usedEmail] = {
+                name: doc.name,
+                email: usedEmail,
+                location: doc.location,
+                height: convertInchesToFeet(doc.height, 0),
+                bio: doc.description,
+                age: doc.age,
+            };
+
+            res.end(JSON.stringify(users));
+        } else {
+            console.log("No user?");
+            res.end();
+        }
+    });
+
+    /*(db.collection("matches").findOne({email: user}, function(err, doc) {
         if (doc) {
             res.json(doc.matches)
         }
         else {
             res.json([])
         }
-    });
+    });*/
 });
 
 
@@ -474,6 +511,6 @@ app.post('/upload', (req, res) => {
 
 });
 
-app.listen(3001, () => {
-    console.log(`http://${hostname}:${port}/`);
+app.listen(port, () => {
+    console.log(`http://${hostname}:${httpPort}/`);
 });

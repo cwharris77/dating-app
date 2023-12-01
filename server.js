@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const app = express()
 
 const hostname = "127.0.0.1";
-const minute = 5;
+const minute = 10;
 
 //134.209.15.30
 const port = 3000;
@@ -205,53 +205,7 @@ app.post("/create/account", (req, res) => {
 
 });
 
-function convertInchesToFeet(number, trueHeight) {
-    if (parseFloat(number) / 12 >= 1) {
-        return convertInchesToFeet(parseFloat(number) - 12, trueHeight+1);
-    } else {
-        return "" + trueHeight + "." + number + " ft";
-    }
-}
-app.get("/get/matches/:USER", (req, res) => {
 
-    console.log("Getting you some MATCHES!");
-
-    let c = req.cookies;
-    let usedEmail = c.login.email;
-
-    if (req.params.USER != "CurrentUser") {
-        usedEmail = req.params.USER;
-    }
-
-    console.log(usedEmail);
-
-    db.collection("biographies").findOne({email: usedEmail}, function(err, doc) {
-        if (doc) {
-            users[usedEmail] = {
-                name: doc.name,
-                email: usedEmail,
-                location: doc.location,
-                height: convertInchesToFeet(doc.height, 0),
-                bio: doc.description,
-                age: doc.age,
-            };
-
-            res.end(JSON.stringify(users));
-        } else {
-            console.log("No user?");
-            res.end();
-        }
-    });
-
-    /*(db.collection("matches").findOne({email: user}, function(err, doc) {
-        if (doc) {
-            res.json(doc.matches)
-        }
-        else {
-            res.json([])
-        }
-    });*/
-});
 
 
 
@@ -413,19 +367,84 @@ app.post("/edit/profile", (req, res) => {
 
 // New routes to create rooms
 
+function convertInchesToFeet(number, trueHeight) {
+    if (parseFloat(number) / 12 >= 1) {
+        return convertInchesToFeet(parseFloat(number) - 12, trueHeight+1);
+    } else {
+        return "" + trueHeight + "." + number + " ft";
+    }
+}
+app.get("/get/matches/:USER", (req, res) => {
+
+    console.log("Getting you some MATCHES!");
+
+    let c = req.cookies;
+    let usedEmail = c.login.email;
+
+    if (req.params.USER != "CurrentUser") {
+        usedEmail = req.params.USER;
+    }
+
+    db.collection("biographies").findOne({email: usedEmail}, function(err, doc) {
+        if (doc) {
+            users[usedEmail] = {
+                name: doc.name,
+                email: usedEmail,
+                location: doc.location,
+                height: convertInchesToFeet(doc.height, 0),
+                bio: doc.description,
+                age: doc.age,
+                roomId: 0,
+            };
+
+            res.end(JSON.stringify(users));
+        } else {
+            console.log("No user?");
+            res.end();
+        }
+    });
+
+    /*(db.collection("matches").findOne({email: user}, function(err, doc) {
+        if (doc) {
+            res.json(doc.matches)
+        }
+        else {
+            res.json([])
+        }
+    });*/
+});
+
+function convertNameToEmail(name) {
+    console.log("Getting users with: " + name);
+    console.log(users);
+    for (bio in users) {
+        if (users[bio].name == name) {
+            console.log("true");
+            return bio;
+        }
+    }
+}
+
 app.post('/create/room/', (req, res) => {
-    let user = req.body.user;
-    let other = req.body.others;
+    console.log("Creating new room: ");
+    let c = req.cookies;
+    let user = c.login.email;
+    let other = convertNameToEmail(req.body.other);
+    
+
     
     if (rooms[roomNumbers] == null) {
         // Room doesn't exist with specific number
-        users[user] = roomNumbers;
+        users[user].roomId = roomNumbers;
+
+        console.log("Setting user to room number");
+        console.log(other);
 
         // Sets user to that room number
         if (wantToMatch[user] != null) {
             wantToMatch[user].push(other);
         } else {
-            wantToMatch[users] = [];
+            wantToMatch[user] = [];
             wantToMatch[user].push(other);
         }
         roomNumbers++;
@@ -438,20 +457,17 @@ app.post('/create/room/', (req, res) => {
 });
 
 app.get('/get/roomStatus/:user', (req, res) => {
-    let person = req.params.user;
+    let c = req.cookies;
+    let person = c.login.email;
     let currentRoomNumber = 0;
 
-
     for (entry in users) {
-        console.log("Entry: " + entry);
         if (entry == person) {
-            console.log("found room number");
-            currentRoomNumber = users[entry];
-
-            console.log(currentRoomNumber);
-
+            console.log("Entry found person");
+            currentRoomNumber = users[entry].roomId;      
             for (entry in users) {
-                if (users[entry] == currentRoomNumber && parseFloat(currentRoomNumber) == currentRoomNumber) {
+                console.log("room ID?")
+                if (users[entry].roomId == currentRoomNumber && parseFloat(currentRoomNumber) == currentRoomNumber) {
                     res.end("true");
                     return;
                 }
@@ -465,9 +481,12 @@ app.get('/get/roomStatus/:user', (req, res) => {
 });
 
 app.get('/get/room/:user', (req, res) => {
-    let person = req.params.user;
+    console.log("Checking if user is in room");
+    console.log(wantToMatch);
+    let person = convertNameToEmail(req.params.user);
 
-    if (users[person] != null) {
+
+    if (users[person].roomId != 0) {
         res.end("true");
     } else {
         res.end("false");
@@ -475,8 +494,10 @@ app.get('/get/room/:user', (req, res) => {
 });
 
 app.post('/join/room', (req, res) => {
-    let other = req.body.other;
-    let user = req.body.user;
+    console.log("Finding out if you can join room");
+    let other = convertNameToEmail(req.body.other);
+    let c = req.cookies;
+    let user = c.login.email;
 
     function grabCurrent(value) {
         return value == user;
@@ -485,12 +506,12 @@ app.post('/join/room', (req, res) => {
     if (wantToMatch[other].find(grabCurrent)) {
         // Found other likes the user
         console.log("Other likes user, having both join the users");
-        let currentRoomId = users[other];
+        let currentRoomId = users[other].roomId;
 
         console.log(users[other]);
         console.log(parseFloat(users[other]));
 
-        users[user] = parseFloat(users[other]);
+        users[user].roomId = parseFloat(users[other].roomId);
 
         let endResponse = JSON.stringify({
             response: true, 
@@ -502,7 +523,7 @@ app.post('/join/room', (req, res) => {
         console.log(endResponse);
         res.end(endResponse);
     } else {
-
+        
         res.end("false");
     }
 });

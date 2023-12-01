@@ -16,7 +16,11 @@
         <h3 id="matchee">
             Person of Interest's Name
         </h3>
-        <video id="webcam"></video>
+        
+        <video id="local"></video>
+        
+        <video id="remote"></video>
+        
 
         <a href="./homepage.html">
             <button id="goBack">
@@ -33,6 +37,8 @@
     </section>
 
 </body>
-<script src="../js/cam.js"></script>
+<script type = "module" src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js" defer></script>
+<script type = "module" src="/socket.io/socket.io.js" defer></script>
+<script src="../js/cam.js" defer></script>
 
 </html>

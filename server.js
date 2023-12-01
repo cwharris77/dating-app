@@ -12,6 +12,22 @@ const minute = 5;
 //134.209.15.30
 const port = 3000;
 
+const httpServer = require("http").Server(app);
+const io = require("socket.io")(httpServer);
+
+io.on('connection',function(socket){
+    socket.on('join-room', (roomId, user) => {
+        console.log(user + " has joined Room " + roomId );
+        socket.join(roomId);
+        socket.to(roomId).emit('user-connected', user);
+    });
+});
+
+httpServer.listen(port, function(){
+    console.log("Booting up socket server");
+});
+
+
 app.use(cookieParser());
 app.use(express.json());
 
@@ -53,6 +69,11 @@ app.use(express.static("./public_html/account", { index: 'login.html' }));
 
 var sessions = {};
 var mateSessions = {};
+
+var wantToMatch = {};
+var rooms = {};
+var users = {};
+var roomNumbers = 1;
 
 function createSession(email) {
     let sid = Math.floor(Math.random() * 1000000000);
@@ -353,10 +374,106 @@ app.post("/edit/profile", (req, res) => {
 
 });
 
+// New routes to create rooms
+
+app.post('/create/room/', (req, res) => {
+    let user = req.body.user;
+    let other = req.body.others;
+    
+    if (rooms[roomNumbers] == null) {
+        // Room doesn't exist with specific number
+        users[user] = roomNumbers;
+
+        // Sets user to that room number
+        if (wantToMatch[user] != null) {
+            wantToMatch[user].push(other);
+        } else {
+            wantToMatch[users] = [];
+            wantToMatch[user].push(other);
+        }
+        roomNumbers++;
+
+        res.end("true");
+    } else {
+        res.end("false")
+    }
+    
+});
+
+app.get('/get/roomStatus/:user', (req, res) => {
+    let person = req.params.user;
+    let currentRoomNumber = 0;
+
+
+    for (entry in users) {
+        console.log("Entry: " + entry);
+        if (entry == person) {
+            console.log("found room number");
+            currentRoomNumber = users[entry];
+
+            console.log(currentRoomNumber);
+
+            for (entry in users) {
+                if (users[entry] == currentRoomNumber && parseFloat(currentRoomNumber) == currentRoomNumber) {
+                    res.end("true");
+                    return;
+                }
+            }
+        }
+    }
+
+    
+    res.end("false");
+    
+});
+
+app.get('/get/room/:user', (req, res) => {
+    let person = req.params.user;
+
+    if (users[person] != null) {
+        res.end("true");
+    } else {
+        res.end("false");
+    }
+});
+
+app.post('/join/room', (req, res) => {
+    let other = req.body.other;
+    let user = req.body.user;
+
+    function grabCurrent(value) {
+        return value == user;
+    }
+
+    if (wantToMatch[other].find(grabCurrent)) {
+        // Found other likes the user
+        console.log("Other likes user, having both join the users");
+        let currentRoomId = users[other];
+
+        console.log(users[other]);
+        console.log(parseFloat(users[other]));
+
+        users[user] = parseFloat(users[other]);
+
+        let endResponse = JSON.stringify({
+            response: true, 
+            roomId: currentRoomId, 
+            firstUser: user, 
+            secondUser: other
+        });
+        
+        console.log(endResponse);
+        res.end(endResponse);
+    } else {
+
+        res.end("false");
+    }
+});
+
 app.post('/upload', (req, res) => {
 
 });
 
-app.listen(port, () => {
+app.listen(3001, () => {
     console.log(`http://${hostname}:${port}/`);
 });

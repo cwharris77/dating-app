@@ -9,10 +9,21 @@ function getMatches(currentUser) {
     match_container.innerHTML = "";
     fetch(`/get/matches/${currentUser}`).then((result) => {
         if (result) {
+            console.log("Waiting for result");
             result.json().then((data) => {
                 console.log(data);
+                let profile = "";
+
+                if (Object.keys(data) == 0) {
+                    profile += "<div class=\"user-header\">";
+                    profile += "<h1>No users online!</h1>";
+                    profile += "</div>";
+                    match_container.innerHTML += profile;
+
+                    console.log("No users");
+                }
                 for (matches in data) {
-                    let profile = "";
+                    console.log("Entries");
                     profile += "<div class=\"user-header\">";
                     profile += `<h2 id="name">${data[matches].name}</h2>`;
                     profile += `<h4 id="age">Age: ${data[matches].age}</h4>`;
@@ -110,6 +121,8 @@ function checkRoomStatus() {
     var getRoomStatus = `http://${hostname}:${port}/get/roomStatus/${"CurrentUser"}`;
 
     console.log("Checking if you need to be redirected");
+
+    
 
     fetch(getRoomStatus)
     .then((result) => result.text())

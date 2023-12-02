@@ -23,7 +23,10 @@ function getMatches(currentUser) {
                     console.log("No users");
                 }
                 for (matches in data) {
-                    console.log("Entries");
+                    let fullName = data[matches].name;
+                    fullName = fullName.toString();
+                    console.log(fullName);
+                    console.log(fullName.split(" ").join(""));
                     profile += "<div class=\"user-header\">";
                     profile += `<h2 id="name">${data[matches].name}</h2>`;
                     profile += `<h4 id="age">Age: ${data[matches].age}</h4>`;
@@ -35,7 +38,7 @@ function getMatches(currentUser) {
                     profile += `<h3>About me: </h3>`;
                     profile += `<div id="bio">`;
                     profile += `${data[matches].bio}`;
-                    profile += `<button id="like-profile" onclick = clickProfile("${data[matches].name}") type="button"> Select </button></a>`;
+                    profile += `<button id="like-profile" onclick = clickProfile('${fullName.split(" ").join("")}') type="button"> Select </button></a>`;
                     // Here it should wait until the other user accepts.
 
                     //profile += `</div> <br> <a href="../account/video.html"> 

@@ -386,7 +386,7 @@ app.get("/get/matches/:USER", (req, res) => {
     db.collection("biographies").findOne({email: usedEmail}, function(err, doc) {
         if (doc) {
             users[usedEmail] = {
-                name: doc.name,
+                name: doc.name.split(" ").join(""),
                 email: usedEmail,
                 location: doc.location,
                 height: convertInchesToFeet(doc.height, 0),

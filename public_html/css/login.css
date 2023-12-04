@@ -1,6 +1,6 @@
 body {
-    display: flex;
-    justify-content: center;
+    /*display: flex;
+    justify-content: center;*/
     height: 100vh;
     margin: 0;
 }
@@ -118,6 +118,15 @@ input[type="submit"] {
 	text-align: center;
 }
 
+/* Header, Footer, and other styles */
+header {
+	height: 10%;
+
+	font-family: monospace;
+	font-size: 300%;
+	text-align: right;
+}
+
 footer {
 	position: absolute;
 	bottom: 0;
@@ -126,10 +135,11 @@ footer {
 	height: 10%;
 
 	background-color: red;
+
+	text-align: center;
 }
 
 p {
 	color: white;
-	margin-left: 50%;
-
 }
+

@@ -2,16 +2,20 @@ const urlParams = new URLSearchParams(window.location.search);
 const email = urlParams.get('email');
 const retry = urlParams.get('retry')
 const errorMessage = document.querySelector("h3");
+const h1 = document.getElementById("enter-header")
+const emailInput = document.getElementById("emailInput");
 
-let h1 = document.getElementById("enter-header")
-h1.innerHTML = `Please enter the OTP sent to ${email}`
+if (h1) {
+    h1.innerHTML = `Please enter the OTP sent to ${email}`
+}
 
-let emailInput = document.getElementById("emailInput");
-emailInput.value = email;
+if (emailInput) {
+    emailInput.value = email;
+}
 
-if (retry == true) {
+if (retry == true && errorMessage) {
     errorMessage.classList.add("hidden")
-} else {
+} else if (retry == false && errorMessage) {
     errorMessage.classList.remove("hidden")
 }
 
@@ -41,3 +45,29 @@ function moveToPreviousInput(event, previousInputId) {
         }
     }
 }
+
+function submitNewPassword(formData) {
+    const data = {
+        email: formData.get("email"),
+        newPass: formData.get("new-password"),
+        confirmPass: formData.get("confirm-password")
+    }
+
+    fetch('/account/reset-password', {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json', 
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        let message = data.message
+        if (message.startsWith('matching issue')) {
+            window.alert("Error: Passwords must match!")
+        }
+    });
+}
+
+
+

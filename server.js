@@ -570,7 +570,7 @@ app.get('/get/roomStatus/:user', (req, res) => {
  * Reset Password Route
  * Sends a verification email with a one-time passcode (OTP) for password reset.
  */
-app.post('/account/resetpassword', (req, res) => {
+app.post('/account/request-reset-password', (req, res) => {
     const userEmail = req.body["email-address"];
 
     const otp = generateOTP(8); // Generate a 8-digit OTP
@@ -637,7 +637,7 @@ app.post('/account/verify-otp', (req, res) => {
         .then((verified) => {
             console.log(verified)
             if (verified) {
-                res.redirect(`/account/resetpassword.html?email=${encodeURIComponent(user)}`)
+                res.redirect(`/account/reset-password.html?email=${encodeURIComponent(user)}`)
             } else {
                 res.redirect(`/account/otp.html?email=${encodeURIComponent(user)}&retry=true`)
             }
@@ -645,6 +645,19 @@ app.post('/account/verify-otp', (req, res) => {
         .catch((err) => {
             console.log(err)
         });
+})
+
+app.post('/account/reset-password', (req, res) => {
+    let user = req.body.email
+    let newPass = req.body.newPass
+    let confirmPass = req.body.confirmPass
+
+    if (newPass !== confirmPass) {
+        res.json({message: "matching issue"})
+    } else {
+        res.json({message: "success"})
+    }
+
 })
 
 /**

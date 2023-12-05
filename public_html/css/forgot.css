@@ -16,6 +16,18 @@ form, #email-div {
 	flex-direction: column;
 	justify-content: center;
 }
+
+#reset-form {
+	width: 50%;
+	margin: 5% auto;
+
+	background-color: white;
+
+	border-radius: 15px;
+
+	padding: 10px;
+}
+
  header {
 	display: flex;
  	align-items: center;

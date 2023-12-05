@@ -637,7 +637,7 @@ app.post('/account/verify-otp', (req, res) => {
         .then((verified) => {
             console.log(verified)
             if (verified) {
-                res.redirect(`/account/reset-password.html?email=${encodeURIComponent(user)}`)
+                res.redirect(`/account/resetpassword.html?email=${encodeURIComponent(user)}`)
             } else {
                 res.redirect(`/account/otp.html?email=${encodeURIComponent(user)}&retry=true`)
             }
@@ -648,14 +648,40 @@ app.post('/account/verify-otp', (req, res) => {
 })
 
 app.post('/account/reset-password', (req, res) => {
-    let user = req.body.email
-    let newPass = req.body.newPass
-    let confirmPass = req.body.confirmPass
+    let user = "" + req.body.email
+    let newPass = "" + req.body.newPass
+    let confirmPass = "" + req.body.confirmPass
 
     if (newPass !== confirmPass) {
         res.json({message: "matching issue"})
     } else {
-        res.json({message: "success"})
+        let newSalt = generateSalt(newPass);
+
+        var hash = crypto.createHash('sha3-256');
+        var combinedPassword = newPass + newSalt.toString();
+
+        var saltAndPass = combinedPassword;
+        let data = hash.update(saltAndPass, 'utf-8');
+        let newHash = data.digest('hex');
+
+        let updateDoc = db.collection("users").updateOne({ email: user }, {
+        $set:
+        {   
+            salt: newSalt,
+            hash: newHash 
+        }
+
+        });
+        updateDoc.then((doc) => {
+            // Success when updating
+            if (doc) {
+                console.log("Updated!");
+                res.json({message: "Password updated successfully!"});
+            }
+        }).catch((err) => {
+            // Error while updating
+            res.json({message: "Error updating"});
+        });
     }
 
 })

@@ -1,9 +1,10 @@
 const match_container = document.getElementById("profile-container");
 
-const hostname = "127.0.0.1";
-const port = 3001;
-const httpPort = 3001;
-const socket = io.connect(`http://${hostname}:${httpPort}/`);
+const hostname = "joinlovemingle.xyz";
+//const hostname = "134.209.15.30";
+const port = 443; // 80
+const httpPort = 443;
+const socket = io.connect(`https://${hostname}:${httpPort}/`, {secure: true});
 
 function getMatches(currentUser) {
     match_container.innerHTML = "";
@@ -28,7 +29,7 @@ function getMatches(currentUser) {
                     console.log(fullName);
                     console.log(fullName.split(" ").join(""));
                     profile += "<div class=\"user-header\">";
-                    profile += `<h2 id="name">${data[matches].name}</h2>`;
+                    profile += `<h2 id="name">${data[matches].name.replace(/([A-Z][a-z])/g, ' $1').trim()}</h2>`;
                     profile += `<h4 id="age">Age: ${data[matches].age}</h4>`;
                     profile += `<h4 id="location">Location: ${data[matches].location}</h4>`;
                     profile += `<h4 id="height">Height: ${data[matches].height} </h4> </div>`
@@ -61,9 +62,9 @@ function clickProfile(person) {
 
     console.log("You clicked a profile " + person);
 
-    var getRoomUrl = `http://${hostname}:${port}/get/room/${person}`;
-    var createRoomUrl = `http://${hostname}:${port}/create/room`;
-    var joinRoomUrl = `http://${hostname}:${port}/join/room/`;
+    var getRoomUrl = `https://${hostname}:${port}/get/room/${person}`;
+    var createRoomUrl = `https://${hostname}:${port}/create/room`;
+    var joinRoomUrl = `https://${hostname}:${port}/join/room/`;
     
     // It checks to see if room exists
     fetch(getRoomUrl)
@@ -121,7 +122,7 @@ function clickProfile(person) {
 }
 
 function checkRoomStatus() {
-    var getRoomStatus = `http://${hostname}:${port}/get/roomStatus/${"CurrentUser"}`;
+    var getRoomStatus = `https://${hostname}:${port}/get/roomStatus/${"CurrentUser"}`;
 
     console.log("Checking if you need to be redirected");
 

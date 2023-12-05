@@ -606,7 +606,7 @@ app.post('/account/resetpassword', (req, res) => {
             });
 
                 // Redirect with the encrypted email in the URL
-                res.redirect(`/account/resetpassword.html?email=${encodeURIComponent(userEmail)}`);
+                res.redirect(`/account/otp.html?email=${encodeURIComponent(userEmail)}&retry=false`);
             } else {
                 res.send("No user with that email found")
             }
@@ -632,26 +632,37 @@ app.post('/account/verify-otp', (req, res) => {
         }
     }
 
-    try {
-        otp = parseInt(otp_string)
-        verifyOTP(otp, user);
-    } catch {
-        res.send("The code should only contain numbers")
-    }
+    otp = parseInt(otp_string)
+    verifyOTP(otp, user)
+        .then((verified) => {
+            console.log(verified)
+            if (verified) {
+                res.redirect(`/account/resetpassword.html?email=${encodeURIComponent(user)}`)
+            } else {
+                res.redirect(`/account/otp.html?email=${encodeURIComponent(user)}&retry=true`)
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+        });
 })
 
 /**
- * Generate One-Time Passcode (OTP)
- * Generates a random decimal number of a specified length for OTP.
+ * Generate Random Integer from Digits
+ * Generates a random integer by concatenating random digits from 0 to 9.
  *
- * @param {number} length - The desired length of the OTP.
- * @returns {number} A random decimal number of the specified length.
+ * @param {number} length - The length of the generated integer (number of digits).
+ * @returns {number} A random integer constructed from random digits.
  */
 function generateOTP(length) {
-    const byteLength = Math.ceil(length / 2);
-    const randomBytes = crypto.randomBytes(byteLength);
-    const randomNumber = parseInt(randomBytes.toString('hex').slice(0, length - 1), 16);
-    return randomNumber;
+    let randomIntegers = "";
+
+    for (let i = 0; i < length; i++) {
+        const randomInteger = Math.floor(Math.random() * 10); // A random digit from 0-9
+        randomIntegers += randomInteger;
+    }
+
+    return parseInt(randomIntegers);
 }
 
 /**
@@ -660,12 +671,19 @@ function generateOTP(length) {
  *
  * @param {number} otp - The entered OTP.
  * @param {string} user - The user's email.
+ * 
+ * @return {bool}  - True if the entered otp equals the users generated otp
  */
-function verifyOTP(otp, user) {
-    console.log(user)
-    console.log(otp)
+async function verifyOTP(OTP, email) {
+    let user = db.collection("users").findOne({email: email, otp: OTP}, function(err, doc) {
+            if (doc) {
+                return true
+            } else {
+                return false
+            }
+    });   
 
-    // TODO
+    return await user;
 }
 
 app.post('/upload', (req, res) => {

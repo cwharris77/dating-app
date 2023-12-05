@@ -1,11 +1,19 @@
 const urlParams = new URLSearchParams(window.location.search);
 const email = urlParams.get('email');
+const retry = urlParams.get('retry')
+const errorMessage = document.querySelector("h3");
 
 let h1 = document.getElementById("enter-header")
 h1.innerHTML = `Please enter the OTP sent to ${email}`
 
 let emailInput = document.getElementById("emailInput");
 emailInput.value = email;
+
+if (retry == true) {
+    errorMessage.classList.add("hidden")
+} else {
+    errorMessage.classList.remove("hidden")
+}
 
 function moveToNextInput(currentInput, nextInputId) {
     const maxLength = parseInt(currentInput.getAttribute('maxlength'));

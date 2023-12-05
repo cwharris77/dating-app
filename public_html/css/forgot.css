@@ -68,7 +68,10 @@ button {
     font-size: 170%;
 }
 
-h1 {
+h1, h3 {
 	text-align: center;
 }
 
+.hidden {
+	display: none;
+}

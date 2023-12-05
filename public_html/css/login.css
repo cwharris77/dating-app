@@ -1,6 +1,4 @@
 body {
-    /*display: flex;
-    justify-content: center;*/
     height: 100vh;
     margin: 0;
 }
@@ -12,11 +10,11 @@ body {
     flex-direction: column;
     align-items: center;
 
-	margin: 20px auto;
+	margin: 5% auto;
 	padding: 10px;
 
-	height: 60%;
-	width: 40%;
+	height: 40%;
+	width: 35%;
 
 	background-color: white;
 
@@ -124,7 +122,6 @@ header {
 
 	font-family: monospace;
 	font-size: 300%;
-	text-align: right;
 }
 
 footer {
@@ -142,4 +139,15 @@ footer {
 p {
 	color: white;
 }
+
+img {
+	margin: auto;
+
+	width: 20%;
+	height: auto;
+}
+
+
+
+
 

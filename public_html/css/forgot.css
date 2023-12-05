@@ -1,0 +1,36 @@
+body {
+	
+}
+
+#email-div {
+	background-color: white;
+
+	width: 60%;
+	margin: 20px auto;
+	padding: 10px;
+
+	border-radius: 15px;
+ }
+
+ header {
+	display: flex;
+ 	align-items: center;
+	justify-content: space-evenly;
+ }
+
+ a {
+ 	position: absolute;
+ 	top: 2%;
+ 	right: 5%;
+
+ 	color: white;
+
+ 	font-size: 140%;
+
+ 	margin-left: ;
+ }
+
+ img {
+ 	width: 20%;
+ }
+

@@ -2,8 +2,6 @@ const submit_edit = document.getElementById("submit-profile");
 
 function handle_submit() {
 
-    console.log("Sent!");
-
     const name_edit = document.getElementById("name-edit").value;
     const age_edit = document.getElementById("age-edit").value;
     const location_edit = document.getElementById("loc-edit").value;

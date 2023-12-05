@@ -11,7 +11,11 @@ body {
 
 	border-radius: 15px;
  }
-
+form, #email-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
  header {
 	display: flex;
  	align-items: center;
@@ -33,4 +37,38 @@ body {
  img {
  	width: 20%;
  }
+
+button {
+	width: 20%;
+	margin: auto;
+}
+
+#back {
+	position: static;
+	color: black;
+
+	font-size: 120%;
+}
+
+/* Add some basic styling for the container and inputs */
+.digit-input-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+
+    width: 55%;
+    margin: auto;
+}
+
+.digit-input {
+    width: 60px;
+    height: 70px;
+    text-align: center;
+
+    font-size: 170%;
+}
+
+h1 {
+	text-align: center;
+}
 

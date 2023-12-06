@@ -18,6 +18,10 @@ const mongoose = require('mongoose');
 const express = require('express')
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+
+const https = require('https');
+const fs = require(`fs`);
+
 const bodyParser = require('body-parser');
 
 // using Twilio SendGrid's v3 Node.js Library
@@ -75,13 +79,14 @@ app.use(cookieParser());
 app.use(express.json());
 
 
+
+app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
+
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Parse JSON bodies (as sent by API clients)
 app.use(bodyParser.json());
-
-app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
 
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';
@@ -492,7 +497,7 @@ app.post('/create/room/', (req, res) => {
     let user = c.login.email;
     let other = convertNameToEmail(req.body.other);
     
-    if (rooms[roomNumbers] == null) {
+    if (rooms[roomNumbers] == null && users[user].roomId == 0) {
         // Room doesn't exist with specific number
         users[user].roomId = roomNumbers;
 
@@ -515,7 +520,10 @@ app.get('/getRoomId', (req, res) => {
     let c = req.cookies;
     let person = c.login.email;
 
-    res.end(JSON.stringify({ roomId: users[person].roomId }));
+    console.log(users[person]);
+    console.log(JSON.stringify({ roomId: users[person].roomId }));
+
+    res.json({ roomId: users[person].roomId });
 });
 
 app.get('/get/room/:user', (req, res) => {
@@ -575,15 +583,29 @@ app.get('/get/roomStatus/:user', (req, res) => {
     let person = c.login.email;
     let currentRoomNumber = 0;
 
+    
     for (entry in users) {
         if (entry == person) {
+	    console.log("Passed the entry and person test: " + person);
             currentRoomNumber = users[entry].roomId; 
                  
             for (entry in users) {
+		console.log("Checking user: " + users[entry].name + " for " + person);
+		console.log("Room number of user " + users[entry].name + " : " + users[entry].roomId);
                 if (users[entry].roomId == currentRoomNumber && parseFloat(currentRoomNumber) == currentRoomNumber && users[entry].email != person && currentRoomNumber != 0) {
-                    users[entry].roomId = 0;
-                    console.log(wantToMatch);
-                    res.end("true");
+                    
+		    setTimeout(()=> {
+			users[entry].roomId = 0;
+		    }, 10000);
+                   
+                    setTimeout(()=> {
+			if (users[entry].roomId != 0) {
+			    res.end("true");
+			    console.log("Sent");
+			}
+	            	
+		    }, Math.floor(Math.random() * 5000));	  
+		   
                     return;
                 }
             }

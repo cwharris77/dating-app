@@ -1,3 +1,13 @@
+/*
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: login.css
+  Class: CSC 337
+
+  This CSS file contains styling rules for form elements used in LoveMingle's login and sign-up pages.
+  It includes styles for form containers, buttons, input fields, icons, and other related elements.
+  Additionally, it provides styling for the header, footer, and images on the page.
+*/
+
 body {
     height: 100vh;
     margin: 0;

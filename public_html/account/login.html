@@ -1,3 +1,14 @@
+<!--
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: login.html
+  Class: CSC 337
+
+  This HTML file represents the login page for LoveMingle.
+  It includes forms for login and sign-up, buttons to switch between them, and additional input fields for user authentication.
+  The page also features a LoveMingle logo in the header, links to external stylesheets and JavaScript files, and a copyright footer.
+  JavaScript at the end handles form submissions for both login and sign-up.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,8 +17,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - LoveMingle</title>
 
+    <!-- Font Awesome provides icons for free use -->
     <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
-    <script defer type="text/javascript" src="../js/login.js"></script>
+    <script defer src="../js/login.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/login.css">
@@ -59,8 +71,6 @@
                     <i class="fa fa-lock icon"></i>
                     <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
                 </div>
-
-                <!-- Additional sign up fields go here -->
             </div>
 
             <input type="submit" id="signUpSubmit" class="" value="Sign Up">
@@ -71,7 +81,7 @@
         <p>&copy; 2023 LoveMingle. All rights reserved.</p>
     </footer>
 
-    <script type="text/javascript">
+    <script>
         document.getElementById('loginForm').addEventListener('submit', function (event) {
             // Prevent the default form submission
             event.preventDefault();

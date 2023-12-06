@@ -22,7 +22,7 @@ function getRoomId() {
       console.log("Response data");
       console.log(data);
       if (data.roomId != null && data.roomId != 0) {
-         roomId = parseFloat(data);
+         roomId = data.roomId;
 
          peerConnection.on('open', id => {
             socket.emit('join-room', roomId, id);
@@ -108,7 +108,6 @@ function getRoomId() {
          }
          
          
-         webcamButton.onclick = startCall;
          
          startCall();
       }
@@ -116,4 +115,3 @@ function getRoomId() {
 }
 
 getRoomId();
-

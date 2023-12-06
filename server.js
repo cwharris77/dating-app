@@ -1,9 +1,34 @@
+/**
+ * Server-Side JavaScript File
+ * Handles server functionalities for a dating application.
+ * Uses MongoDB for data storage, Express for server setup, and Socket.IO for real-time communication.
+ *
+ * Libraries:
+ * - mongoose: MongoDB object modeling for Node.js
+ * - express: Fast, unopinionated, minimalist web framework for Node.js
+ * - cookie-parser: Parse Cookie header and populate req.cookies
+ * - crypto: Cryptographic functionalities for secure operations
+ * - body-parser: Parse incoming request bodies in a middleware before your handlers
+ * - @sendgrid/mail: Twilio SendGrid's v3 Node.js Library for email functionalities
+ * - socket.io: Real-time bidirectional event-based communication
+ */
+
+
 const mongoose = require('mongoose');
 const express = require('express')
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+
 const https = require('https');
 const fs = require(`fs`);
+
+const bodyParser = require('body-parser');
+
+// using Twilio SendGrid's v3 Node.js Library
+// https://github.com/sendgrid/sendgrid-nodejs
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 const app = express()
 
 const hostname = "134.209.15.30";
@@ -49,7 +74,15 @@ io.on('connection',function(socket){
 app.use(cookieParser());
 app.use(express.json());
 
+
 app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Parse JSON bodies (as sent by API clients)
+app.use(bodyParser.json());
+
 
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';
@@ -61,7 +94,11 @@ var userSchema = new mongoose.Schema({
     email: String,
     hash: String,
     salt: Number,
-    settings: Array
+    settings: Array,
+    otp: {type: Number,
+          default: null
+    }
+
 });
 
 var bioSchema = new mongoose.Schema({
@@ -557,6 +594,165 @@ app.get('/get/roomStatus/:user', (req, res) => {
     res.end("false");
     
 });
+
+/**
+ * Reset Password Route
+ * Sends a verification email with a one-time passcode (OTP) for password reset.
+ */
+app.post('/account/request-reset-password', (req, res) => {
+    const userEmail = req.body["email-address"];
+
+    const otp = generateOTP(8); // Generate a 8-digit OTP
+
+    const msg = {
+      to: `${userEmail}`, // recipient
+      from: 'loveminglehelp@gmail.com', 
+      subject: 'Reset Your Password',
+      text: 'Your 8 Digit OTP',
+      html: `<h2>${otp}</h2>`,
+    }
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        let user = db.collection("users").findOne({email: userEmail}, function(err, doc) {
+            if (doc) {
+                console.log(doc.otp)
+                console.log(typeof(otp))
+
+                let updateDoc = db.collection("users").updateOne({ email: userEmail }, {
+                $set:
+                {
+                    otp: otp,
+                }
+            });
+
+            updateDoc.then((doc) => {
+                // Success when updating
+                if (doc) {
+                    console.log("Updated otp!");
+                }
+            });
+
+                // Redirect with the encrypted email in the URL
+                res.redirect(`/account/otp.html?email=${encodeURIComponent(userEmail)}&retry=false`);
+            } else {
+                res.send("No user with that email found")
+            }
+        });
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+});
+
+/**
+ * Verify OTP Route
+ * Verifies the entered OTP during the password reset process.
+ */
+app.post('/account/verify-otp', (req, res) => {
+    let otp_string = ""
+    let otp;
+    let user = req.body["email"]
+
+    for (let input in req.body) {
+        if (input != "email") {
+            otp_string += req.body[input]
+        }
+    }
+
+    otp = parseInt(otp_string)
+    verifyOTP(otp, user)
+        .then((verified) => {
+            console.log(verified)
+            if (verified) {
+                res.redirect(`/account/resetpassword.html?email=${encodeURIComponent(user)}`)
+            } else {
+                res.redirect(`/account/otp.html?email=${encodeURIComponent(user)}&retry=true`)
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+})
+
+app.post('/account/reset-password', (req, res) => {
+    let user = "" + req.body.email
+    let newPass = "" + req.body.newPass
+    let confirmPass = "" + req.body.confirmPass
+
+    if (newPass !== confirmPass) {
+        res.json({message: "matching issue"})
+    } else {
+        let newSalt = generateSalt(newPass);
+
+        var hash = crypto.createHash('sha3-256');
+        var combinedPassword = newPass + newSalt.toString();
+
+        var saltAndPass = combinedPassword;
+        let data = hash.update(saltAndPass, 'utf-8');
+        let newHash = data.digest('hex');
+
+        let updateDoc = db.collection("users").updateOne({ email: user }, {
+        $set:
+        {   
+            salt: newSalt,
+            hash: newHash 
+        }
+
+        });
+        updateDoc.then((doc) => {
+            // Success when updating
+            if (doc) {
+                console.log("Updated!");
+                res.json({message: "Password updated successfully!"});
+            }
+        }).catch((err) => {
+            // Error while updating
+            res.json({message: "Error updating"});
+        });
+    }
+
+})
+
+/**
+ * Generate Random Integer from Digits
+ * Generates a random integer by concatenating random digits from 0 to 9.
+ *
+ * @param {number} length - The length of the generated integer (number of digits).
+ * @returns {number} A random integer constructed from random digits.
+ */
+function generateOTP(length) {
+    let randomIntegers = "";
+
+    for (let i = 0; i < length; i++) {
+        const randomInteger = Math.floor(Math.random() * 10); // A random digit from 0-9
+        randomIntegers += randomInteger;
+    }
+
+    return parseInt(randomIntegers);
+}
+
+/**
+ * Verify One-Time Passcode (OTP)
+ * Verifies the entered OTP against the stored OTP for a user.
+ *
+ * @param {number} otp - The entered OTP.
+ * @param {string} user - The user's email.
+ * 
+ * @return {bool}  - True if the entered otp equals the users generated otp
+ */
+async function verifyOTP(OTP, email) {
+    let user = db.collection("users").findOne({email: email, otp: OTP}, function(err, doc) {
+            if (doc) {
+                return true
+            } else {
+                return false
+            }
+    });   
+
+    return await user;
+}
 
 app.post('/upload', (req, res) => {
 

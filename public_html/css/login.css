@@ -1,6 +1,4 @@
 body {
-    display: flex;
-    justify-content: center;
     height: 100vh;
     margin: 0;
 }
@@ -12,11 +10,11 @@ body {
     flex-direction: column;
     align-items: center;
 
-	margin: 20px auto;
+	margin: 5% auto;
 	padding: 10px;
 
-	height: 60%;
-	width: 40%;
+	height: 40%;
+	width: 35%;
 
 	background-color: white;
 
@@ -118,6 +116,14 @@ input[type="submit"] {
 	text-align: center;
 }
 
+/* Header, Footer, and other styles */
+header {
+	height: 10%;
+
+	font-family: monospace;
+	font-size: 300%;
+}
+
 footer {
 	position: absolute;
 	bottom: 0;
@@ -126,10 +132,22 @@ footer {
 	height: 10%;
 
 	background-color: red;
+
+	text-align: center;
 }
 
 p {
 	color: white;
-	margin-left: 50%;
-
 }
+
+img {
+	margin: auto;
+
+	width: 20%;
+	height: auto;
+}
+
+
+
+
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - LoveMingle</title>
+
+    <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <link rel="stylesheet" type="text/css" href="../css/forgot.css">
+
+    <script defer type="text/javascript" src="../js/resetPassword.js"></script>
+</head>
+
+<body>
+    <header>
+        <img src="../img/croppedTransparentLogo.png">
+    </header>
+
+   <form id="email-div" action="/account/verify-otp" method="POST">
+        <h1 id="enter-header">Enter the OTP sent to </h1>
+        <h3 class="hidden">Incorrect Code</h3>
+
+        <div class="digit-input-container">
+            <input id="input1" name="input1" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input2')" onkeydown="moveToPreviousInput(event, 'input1')">
+            <input id="input2" name="input2" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input3')" onkeydown="moveToPreviousInput(event, 'input1')">
+            <input id="input3" name="input3" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input4')" onkeydown="moveToPreviousInput(event, 'input2')">
+            <input id="input4" name="input4" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input5')" onkeydown="moveToPreviousInput(event, 'input3')">
+            <input id="input5" name="input5" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input6')" onkeydown="moveToPreviousInput(event, 'input4')">
+            <input id="input6" name="input6" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input7')" onkeydown="moveToPreviousInput(event, 'input5')">
+            <input id="input7" name="input7" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input8')" onkeydown="moveToPreviousInput(event, 'input6')">
+            <input id="input8" name="input8" class="digit-input" type="text" maxlength="1" oninput="moveToNextInput(this, 'input9')" onkeydown="moveToPreviousInput(event, 'input7')">
+        </div>
+
+        <!-- Hidden input field for email -->
+        <input type="hidden" id="emailInput" name="email" value="">
+
+        <button>Reset Password</button>
+        <a href="forgot.html" id="back">Back</a>
+   </form>
+</body>
+
+</html>

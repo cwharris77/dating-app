@@ -1,22 +1,41 @@
+<!--
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: login.html
+  Class: CSC 337
+
+  This HTML file represents the login page for LoveMingle.
+  It includes forms for login and sign-up, buttons to switch between them, and additional input fields for user authentication.
+  The page also features a LoveMingle logo in the header, links to external stylesheets and JavaScript files, and a copyright footer.
+  JavaScript at the end handles form submissions for both login and sign-up.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Your Dating App</title>
+    <title>Login - LoveMingle</title>
 
+    <!-- Font Awesome provides icons for free use -->
     <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
-    <script defer type="text/javascript" src="../js/login.js"></script>
+    <script defer src="../js/login.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/login.css">
 
 </head>
+
 <body>
+    <header>
+        <img src="../img/croppedTransparentLogo.png" alt="Camera with a heart next to the words LoveMingle" id="logoImg">
+    </header>
     <div id="form-div">
         <div class="button-container">
-          <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign Up</button>
-          <button type="button" id="loginButton" class="form-button active-button" onclick="showLogin();">Login</button>
+            <button type="button" id="signUpButton" class="form-button inactive-button" onclick="showSignUp();">Sign
+                Up</button>
+            <button type="button" id="loginButton" class="form-button active-button"
+                onclick="showLogin();">Login</button>
         </div>
 
         <form id="loginForm">
@@ -33,46 +52,44 @@
                     <input type="password" id="loginPassword" name="password" placeholder="Password" required>
                 </div>
 
-                <a href="" id="forgotPassword">Forgot Password</a>
+                <a href="forgot.html" id="forgotPassword">Forgot Password</a>
             </div>
 
             <input type="submit" id="loginSubmit" value="Login">
 
         </form>
 
-          <form id="signUpForm" class="hidden">
-              <div id="signUpFields" class="fields">
-                  <h2>Sign Up</h2>
-              <div class="input-container">
-                <i class="fa fa-envelope icon"></i>
-                <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
-              </div>
+        <form id="signUpForm" class="hidden">
+            <div id="signUpFields" class="fields">
+                <h2>Sign Up</h2>
+                <div class="input-container">
+                    <i class="fa fa-envelope icon"></i>
+                    <input type="email" id="signUpEmail" name="email" placeholder="Email" required>
+                </div>
 
-              <div class="input-container">
-                <i class="fa fa-lock icon"></i>
-                <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
-              </div>
-
-              <!-- Additional sign up fields go here -->
+                <div class="input-container">
+                    <i class="fa fa-lock icon"></i>
+                    <input type="password" id="signUpPassword" name="password" placeholder="Password" required>
+                </div>
             </div>
 
             <input type="submit" id="signUpSubmit" class="" value="Sign Up">
-          </form>
+        </form>
     </div>
-    
+
     <footer>
-        <p>Footer content</p>
+        <p>&copy; 2023 LoveMingle. All rights reserved.</p>
     </footer>
 
-    <script type="text/javascript">
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
             // Prevent the default form submission
             event.preventDefault();
 
             login();
         });
 
-        document.getElementById('signUpForm').addEventListener('submit', function(event) {
+        document.getElementById('signUpForm').addEventListener('submit', function (event) {
             // Prevent the default form submission
             event.preventDefault();
 
@@ -81,5 +98,5 @@
     </script>
 
 </body>
-</html>
 
+</html>

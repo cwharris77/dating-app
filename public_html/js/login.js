@@ -1,3 +1,13 @@
+/*
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: login.js
+  Class: CSC 337
+
+  This JavaScript file handles login and account creation functionality.
+  It includes functions to switch between login and sign-up views, and sends requests to the server
+  for user authentication and account creation. Upon successful operations, it redirects the user to the homepage or profile edit page.
+*/
+
 // Get references to HTML elements
 let logIn = document.getElementById("loginForm");
 let signUp = document.getElementById("signUpForm");
@@ -16,13 +26,6 @@ function login() {
   let pw = document.getElementById('loginPassword').value;
 
   let data = { email: us, password: pw };
-
-  // send data in the request body
-  // let p = fetch(`/login/${us}/${pw}`, {
-  //   method: 'GET', 
-  //   body: JSON.stringify(data),
-  //   headers: {"Content-Type": "application/json"}
-  // });
 
   let p = fetch(`/login/${us}/${pw}`, { method: 'GET' });
 

@@ -1,0 +1,93 @@
+/*
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: forgot.css
+  Class: CSC 337
+
+  This CSS file contains styling rules for various elements used in LoveMingle's password reset and login pages.
+  It includes styles for form containers, headers, buttons, and digit input fields.
+  Additionally, it provides basic styling for the LoveMingle logo, back link, and hidden elements.
+*/
+
+#email-div {
+	background-color: white;
+
+	width: 60%;
+	margin: 20px auto;
+	padding: 10px;
+
+	border-radius: 15px;
+ }
+form, #email-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#reset-form {
+	width: 50%;
+	margin: 5% auto;
+
+	background-color: white;
+
+	border-radius: 15px;
+
+	padding: 10px;
+}
+
+ header {
+	display: flex;
+ 	align-items: center;
+	justify-content: space-evenly;
+ }
+
+ a {
+ 	position: absolute;
+ 	top: 2%;
+ 	right: 5%;
+
+ 	color: white;
+
+ 	font-size: 140%;
+ }
+
+ img {
+ 	width: 20%;
+ }
+
+button {
+	width: 20%;
+	margin: auto;
+}
+
+#back {
+	position: static;
+	color: black;
+
+	font-size: 120%;
+}
+
+/* Add some basic styling for the container and inputs */
+.digit-input-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+
+    width: 55%;
+    margin: auto;
+}
+
+.digit-input {
+    width: 60px;
+    height: 70px;
+    text-align: center;
+
+    font-size: 170%;
+}
+
+h1, h3 {
+	text-align: center;
+}
+
+.hidden {
+	display: none;
+}

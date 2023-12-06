@@ -77,8 +77,14 @@ function submitNewPassword(formData) {
     .then(res => res.json())
     .then(data => {
         let message = data.message
+
         if (message.startsWith('matching issue')) {
             window.alert("Error: Passwords must match!")
+        } else if (message.startsWith("Password updated successfully!")) {
+            window.alert("Success! Taking you to login")
+            window.location.href = "/account/login.html"
+        } else {
+            window.alert("Error updating password try again later")
         }
     });
 }

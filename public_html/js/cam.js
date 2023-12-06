@@ -3,16 +3,18 @@ const remoteElement = document.getElementById('remote');
 const webcamButton = document.getElementById("turnOn");
 const endWebcamButton = document.getElementById("turnOff");
 
-const hostname = "127.0.0.1";
-const port = 3001;
+//const hostname = "134.209.15.30";
+const hostname = "joinlovemingle.xyz";
+//const port = 3001;
+const port = 443;
 
-const socket = io.connect(`http://${hostname}:${port}/`);
+const socket = io.connect(`https://${hostname}:${port}/`, {secure: true});
 const peerConnection = new Peer();
 
 var roomId = null;
 
 function getRoomId() {
-   var url = `http://${hostname}:${port}/getRoomId`;
+   var url = `https://${hostname}:${port}/getRoomId`;
 
    fetch(url)
    .then((result) => result.json())

@@ -13,6 +13,7 @@
  * - socket.io: Real-time bidirectional event-based communication
  */
 
+
 const mongoose = require('mongoose');
 const express = require('express')
 const cookieParser = require('cookie-parser');
@@ -24,17 +25,36 @@ const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+
+const https = require('https');
+const fs = require(`fs`);
+
 const app = express()
 
-const hostname = "127.0.0.1";
+const hostname = "134.209.15.30";
 const minute = 10;
 
-//134.209.15.30
-const port = 3000;
+const certDir = `/etc/letsencrypt/live`;
+const domain = `joinlovemingle.xyz`;
+const options = {
+  key: fs.readFileSync(`${certDir}/${domain}/privkey.pem`),
+  cert: fs.readFileSync(`${certDir}/${domain}/fullchain.pem`)
+};
+
+//
+
+// port = 3000, httpPort = 3001
+const port = 80;
 const httpPort = 3001;
 
-const httpServer = require("http").Server(app);
-const io = require("socket.io")(httpServer);
+//const httpServer = require("http").Server(app);
+const newHttpsServer = https.createServer(options, app).listen(443);
+const io = require("socket.io")(newHttpsServer);
+
+
+
+///443
+
 
 io.on('connection',function(socket){
     socket.on('join-room', (roomId, user) => {
@@ -44,19 +64,24 @@ io.on('connection',function(socket){
     });
 });
 
-httpServer.listen(httpPort, function(){
+/*httpServer.listen(httpPort, function() {
     console.log("Booting up socket server");
-});
+});*/
+
+
 
 
 app.use(cookieParser());
 app.use(express.json());
+
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Parse JSON bodies (as sent by API clients)
 app.use(bodyParser.json());
+
+app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
 
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';
@@ -276,6 +301,9 @@ app.get("/get/user/:EMAIL", (req, res) => {
 
 app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     // Login
+
+    console.log("Recieved a new response!");
+    console.log(req);
 
     let attemptEmail = req.params.EMAIL;
     let attemptPassword = req.params.PASSWORD;
@@ -730,5 +758,5 @@ app.post('/upload', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`http://${hostname}:${httpPort}/`);
+    console.log(`http://${hostname}:${port}/`);
 });

@@ -267,6 +267,18 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
 
 });
 
+app.get('/get/settings', (req, res) => {
+    let c = req.cookies;
+    
+    db.collection("users").findOne({ email: c.login.email }, function (err, doc) {
+        if (doc && doc.settings) {
+            res.json(doc.settings);
+        } else {
+            res.status(404).json({ error: 'User settings not found' });
+        }
+    })
+})
+
 app.post("/edit/settings", (req, res) => {
     // Update settings
     let c = req.cookies;

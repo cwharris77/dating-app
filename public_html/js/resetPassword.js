@@ -33,7 +33,12 @@ if (retry == true && errorMessage) {
     errorMessage.classList.remove("hidden")
 }
 
-// Move focus to the next input field when current input reaches maxlength
+/**
+ * Move focus to the next input field when the current input reaches maxlength.
+ *
+ * @param {HTMLInputElement} currentInput - The current input element.
+ * @param {string} nextInputId - The ID of the next input field.
+ */
 function moveToNextInput(currentInput, nextInputId) {
     const maxLength = parseInt(currentInput.getAttribute('maxlength'));
     const inputValue = currentInput.value;
@@ -46,7 +51,12 @@ function moveToNextInput(currentInput, nextInputId) {
     }
 }
 
-// Move focus to the previous input field on backspace with empty input
+/**
+ * Move focus to the previous input field on backspace with an empty input.
+ *
+ * @param {Event} event - The keyboard event.
+ * @param {string} previousInputId - The ID of the previous input field.
+ */
 function moveToPreviousInput(event, previousInputId) {
     const currentInput = event.target;
     const currentValue = currentInput.value;
@@ -59,7 +69,11 @@ function moveToPreviousInput(event, previousInputId) {
     }
 }
 
-// Submit new password data via fetch API
+/**
+ * Submit new password data via fetch API.
+ *
+ * @param {FormData} formData - The form data containing new password information.
+ */
 function submitNewPassword(formData) {
     const data = {
         email: formData.get("email"),

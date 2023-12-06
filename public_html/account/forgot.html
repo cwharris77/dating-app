@@ -1,3 +1,13 @@
+<!--
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: forgot.html
+  Class: CSC 337
+
+  This HTML file represents the forgot password page for LoveMingle.
+  It includes a form for users to request a password reset by entering their email address.
+  The page also features a LoveMingle logo in the header, links to external stylesheets and JavaScript files, and a "Login" link.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +24,7 @@
 
 <body>
     <header>
-        <img src="../img/croppedTransparentLogo.png">
+        <img src="../img/croppedTransparentLogo.png" alt="LoveMingle Logo heart on top of a camera">
         <a href="login.html">Login</a>
     </header>
    <form id="email-div" action="/account/request-reset-password" method="POST">
@@ -22,7 +32,7 @@
         <p>Forgot your password?
             Please enter your email address and click on “Reset password“. We will send you an email with a personal access code to your profile for renewal of your password.</p>
        <label for="email-address">Email</label>
-       <input type="email" name="email-address">
+       <input type="email" name="email-address" id="email-address">
 
        <button>Reset Password</button>
    </form>

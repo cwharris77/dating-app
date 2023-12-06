@@ -1,3 +1,13 @@
+/*
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: main.css
+  Class: CSC 337
+
+  This CSS file contains styling rules for the webpages with settings and a header.
+  It includes styles for the body, sections, headings, labels, input fields, buttons, header, main content, and footer.
+  The color scheme consists of light reds and whites, with dark red accents.
+*/
+
 body {
     font-family: Arial, sans-serif;
     background-color: #ffebee;

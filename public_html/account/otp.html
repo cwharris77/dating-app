@@ -1,3 +1,12 @@
+<!--
+  Author: Cooper Harris, Jason Doe, Akli Amrous, Christopher Le
+  File Name: otp.html
+  Class: CSC 337
+
+  This HTML file represents the one time passcode page for LoveMingle.
+  It includes a form for users to enter the OTP sent to their email, digit input fields for OTP, and navigation buttons.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,17 +15,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - LoveMingle</title>
 
-    <script src="https://kit.fontawesome.com/761f285885.js" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" type="text/css" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/forgot.css">
 
-    <script defer type="text/javascript" src="../js/resetPassword.js"></script>
+    <script defer src="../js/resetPassword.js"></script>
 </head>
 
 <body>
     <header>
-        <img src="../img/croppedTransparentLogo.png">
+        <img src="../img/croppedTransparentLogo.png" alt="LoveMingle Logo heart on top of a camera">
     </header>
 
    <form id="email-div" action="/account/verify-otp" method="POST">

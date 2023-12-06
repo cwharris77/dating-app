@@ -29,6 +29,10 @@ const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+
+const https = require('https');
+const fs = require(`fs`);
+
 const app = express()
 
 const hostname = "134.209.15.30";
@@ -75,6 +79,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 
+
 app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
 
 // Parse URL-encoded bodies (as sent by HTML forms)
@@ -82,7 +87,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Parse JSON bodies (as sent by API clients)
 app.use(bodyParser.json());
-
 
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb+srv://jasondoe2:corsairian12@school.e7wiasx.mongodb.net/dating-app?retryWrites=true&w=majority';

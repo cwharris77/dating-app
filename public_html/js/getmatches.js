@@ -1,11 +1,29 @@
+/*
+  Author: Jason Doe, Cooper Harris, Akli Amrous, Christopher Le
+  File Name: getmatches.js
+  Class: CSC 337
+
+  This file handles the match page. It grabs a list of all of the current users on the website
+  then it provide their information. The refresh button will update any
+  new users that join the website. The client also pings the server to see
+  if any other user have also liked their profile. If this happens, and the client
+  had also selected the profile, then they are both redirected to the video.html page.
+*/
+
 const match_container = document.getElementById("profile-container");
 
 const hostname = "joinlovemingle.xyz";
-//const hostname = "134.209.15.30";
-const port = 443; // 80
+const port = 443;
 const httpPort = 443;
 const socket = io.connect(`https://${hostname}:${httpPort}/`, {secure: true});
 
+
+/**
+ * getRoomId will go to the server and ask which room the current user is. 
+ * If the user is in a room, then they will join it and start the webcam code.
+ * 
+ * @param currentUser - currentUser is the client. 
+ */
 function getMatches(currentUser) {
     match_container.innerHTML = "";
     fetch(`/get/matches/${currentUser}`).then((result) => {
@@ -20,10 +38,10 @@ function getMatches(currentUser) {
                     profile += "<h1>No users online!</h1>";
                     profile += "</div>";
                     match_container.innerHTML += profile;
-
-                    console.log("No users");
                 }
                 for (matches in data) {
+                    // Creates a profile blurb for each user on the website. 
+
                     let fullName = data[matches].name;
                     fullName = fullName.toString();
                     console.log(fullName);
@@ -40,10 +58,6 @@ function getMatches(currentUser) {
                     profile += `<div id="bio">`;
                     profile += `${data[matches].bio}`;
                     profile += `<button id="like-profile" onclick = clickProfile('${fullName.split(" ").join("")}') type="button"> Select </button></a>`;
-                    // Here it should wait until the other user accepts.
-
-                    //profile += `</div> <br> <a href="../account/video.html"> 
-                //<button id="edit-profile" type="button"> Select </button></a>`;
 
                     match_container.innerHTML += profile;
                 }
@@ -56,6 +70,10 @@ function getMatches(currentUser) {
     });
 }
 
+/**
+ * clickProfile will fire when you click select on the profile blurb shown after 
+ * pressing select.
+ */
 function clickProfile(person) {
  
     // You click on a profile
@@ -88,9 +106,7 @@ function clickProfile(person) {
                     console.log("Success!");
                     socket.emit('join-room', data.roomId, data.firstUser);
                     socket.emit('join-room', data.roomId, data.secondUser);
-                    
-                    // data[2] is room Id, data[3] is user data[4], 
-                
+
                 } else {
                     console.log("Failed to connect");
                     
@@ -121,12 +137,14 @@ function clickProfile(person) {
 
 }
 
+/**
+ * checkRoomStatus will see if you are in a room on the server.
+ * If you are in a room, you are redirected to the video.html page.
+ */
 function checkRoomStatus() {
     var getRoomStatus = `https://${hostname}:${port}/get/roomStatus/${"CurrentUser"}`;
 
     console.log("Checking if you need to be redirected");
-
-    
 
     fetch(getRoomStatus)
     .then((result) => result.text())
@@ -141,5 +159,3 @@ function checkRoomStatus() {
 }
 
 setInterval(checkRoomStatus, 3000);
-
-// setTimeout(getmatches, 10000);

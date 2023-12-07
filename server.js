@@ -13,7 +13,6 @@
  * - socket.io: Real-time bidirectional event-based communication
  */
 
-
 const mongoose = require('mongoose');
 const express = require('express')
 const cookieParser = require('cookie-parser');
@@ -34,7 +33,6 @@ const https = require('https');
 const fs = require(`fs`);
 
 const app = express()
-
 const hostname = "134.209.15.30";
 const minute = 10;
 
@@ -45,20 +43,11 @@ const options = {
   cert: fs.readFileSync(`${certDir}/${domain}/fullchain.pem`)
 };
 
-//
 
-// port = 3000, httpPort = 3001
+// Old ports were 3000 and 3001, current port is 80 and 443.
 const port = 80;
-const httpPort = 3001;
-
-//const httpServer = require("http").Server(app);
 const newHttpsServer = https.createServer(options, app).listen(443);
 const io = require("socket.io")(newHttpsServer);
-
-
-
-///443
-
 
 io.on('connection',function(socket){
     socket.on('join-room', (roomId, user) => {
@@ -68,17 +57,8 @@ io.on('connection',function(socket){
     });
 });
 
-/*httpServer.listen(httpPort, function() {
-    console.log("Booting up socket server");
-});*/
-
-
-
-
 app.use(cookieParser());
 app.use(express.json());
-
-
 
 app.use(express.static(__dirname + '/static', { dotfiles: 'allow' }))
 
@@ -136,6 +116,11 @@ var rooms = {};
 var users = {};
 var roomNumbers = 1;
 
+/**
+ * This creates a cookie session that stores info on the server. 
+ * 
+ * @param email - Takes in an email to be used for each session.
+ */
 function createSession(email) {
     let sid = Math.floor(Math.random() * 1000000000);
     let now = Date.now();
@@ -144,6 +129,10 @@ function createSession(email) {
     return sid;
 }
 
+/**
+ * This removes a cookie session after a designated amount of minutes, currently at 10.
+ * 
+ */
 function removeSessions() {
     // This will remove a Cookie session after a certain amount of minutes.
     let now = Date.now();
@@ -157,11 +146,23 @@ function removeSessions() {
     }
 }
 
-function generateSalt(password) {
+/**
+ * This creates a random salt for a password.
+ * 
+ */
+function generateSalt() {
     let salt = Math.floor(Math.random() * 1000000000);
     return salt;
 }
 
+/**
+ * This checks to see if you are currently signed in. If you are not, then
+ * it is supposed to redirect you to the login page.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ * @param next - This takes you to the next route.
+ */
 function checkSession(req, res, next) {
     // This will authenticate and make sure you are login based on your cookie.
     // If you are not login, you will be redirected to the sign up or login page.
@@ -193,6 +194,13 @@ app.use("/account/editprofile.html", checkSession);
 app.use("/app/matching.html", checkSession);
 app.use("/app/video.html", checkSession);
 
+/**
+ * Creates an account and stores the information in MongoDB.
+ * It checks if the accoutn already exist with the same email.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.post("/create/account", (req, res) => {
     // This creates an account and generates a salt and hash.
     let newEmail = req.body.email;
@@ -239,11 +247,9 @@ app.post("/create/account", (req, res) => {
             });
 
             newUser.save().then((doc) => {
-                console.log(doc);
+                // Creates a session because you are logging in.
                 newBio.save().then((doc) => {
-                    console.log(doc);
                     newMatches.save().then((doc) => {
-                        console.log(doc);
                         let sid = createSession(newEmail);
                         res.cookie("login",
                             { email: newEmail, sessionID: sid },
@@ -254,7 +260,6 @@ app.post("/create/account", (req, res) => {
                 });
 
             }).catch((err) => {
-                console.log("Error!");
                 console.log(err);
                 res.end("false");
             });
@@ -267,7 +272,12 @@ app.post("/create/account", (req, res) => {
 
 
 
-
+/**
+ * Provides an user's information from MongoDB.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 
 app.get("/get/user/:EMAIL", (req, res) => {
     let c = req.cookies;
@@ -278,24 +288,16 @@ app.get("/get/user/:EMAIL", (req, res) => {
         usedEmail = req.params.EMAIL;
     }
 
-    console.log("Looking for user");
-
     db.collection("biographies").findOne({ email: usedEmail }, function (err, doc) {
         if (doc) {
-
-            console.log("Data was found");
-
             let data = {
                 name: doc.name,
                 age: doc.age,
-                height: doc.height,
+                height: convertInchesToFeet(doc.height),
                 bio: doc.description,
                 location: doc.location,
             }
 
-            console.log("Sending data");
-
-            console.log(JSON.stringify(data));
             res.end(JSON.stringify(data));
         } else {
             res.end(false);
@@ -304,11 +306,17 @@ app.get("/get/user/:EMAIL", (req, res) => {
 
 });
 
+/**
+ * Allow the client to login. It searches for an email based on the attempt email. 
+ * If the email exist, then it uses the salt and attempt password to create
+ * a potential password. If this matches with the hash of the account, then 
+ * login will be successful.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     // Login
-
-    console.log("Recieved a new response!");
-    console.log(req);
 
     let attemptEmail = req.params.EMAIL;
     let attemptPassword = req.params.PASSWORD;
@@ -316,19 +324,12 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     db.collection("users").findOne({ email: attemptEmail }, function (err, doc) {
         if (doc) {
 
-            console.log("Found account");
-
             let actualSalt = doc.salt;
             let combinedPassword = attemptPassword + actualSalt;
-
-            console.log(combinedPassword);
 
             var hash = crypto.createHash('sha3-256');
             let data = hash.update(combinedPassword, 'utf-8');
             let generatedHash = data.digest('hex');
-
-            console.log(generatedHash);
-            console.log(doc.hash);
 
             if (generatedHash == doc.hash) {
                 let sid = createSession(attemptEmail);
@@ -347,6 +348,13 @@ app.get("/login/:EMAIL/:PASSWORD", (req, res) => {
     });
 });
 
+/**
+ * A potential route for saving match sessions. Currently not being used in
+ * the project.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
     var client = req.params.CLIENT;
     var date = req.params.DATE;
@@ -356,6 +364,12 @@ app.get("/match/:CLIENT/:DATE/:STATUS", (req, res) => {
 
 });
 
+/**
+ * Grabs the current profile based on cookies, then get the settings of the user.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get('/get/settings', (req, res) => {
     let c = req.cookies;
     
@@ -368,6 +382,12 @@ app.get('/get/settings', (req, res) => {
     })
 })
 
+/**
+ * Changes the settings array in the MongoDB user schema. 
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.post("/edit/settings", (req, res) => {
     // Update settings
     let c = req.cookies;
@@ -382,10 +402,7 @@ app.post("/edit/settings", (req, res) => {
             };
 
             let updateDoc = db.collection("users").updateOne({ email: c.login.email }, {
-                $set:
-                {
-                    settings: newSettings,
-                }
+                $set: { settings: newSettings }
             });
             updateDoc.then((doc) => {
                 // Success when updating
@@ -399,6 +416,12 @@ app.post("/edit/settings", (req, res) => {
     });
 });
 
+/**
+ * Changes the profile and saves the changes to MongoDB.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.post("/edit/profile", (req, res) => {
     // Update profile
     // Redirect user to profile page
@@ -426,9 +449,7 @@ app.post("/edit/profile", (req, res) => {
     });
     updateDoc.then((doc) => {
         // Success when updating
-
         if (doc) {
-            console.log("Updated!");
             res.end("true");
         }
 
@@ -442,6 +463,12 @@ app.post("/edit/profile", (req, res) => {
 
 // New routes to create rooms
 
+/**
+ * A recursive function that calculates height based on inches. It adds 1 feet for every 12 inches.
+ * 
+ * @param number - The original number provided that is subtracted by 12.
+ * @param trueHeight - The amount of feet.
+ */
 function convertInchesToFeet(number, trueHeight) {
     if (parseFloat(number) / 12 >= 1) {
         return convertInchesToFeet(parseFloat(number) - 12, trueHeight+1);
@@ -449,6 +476,14 @@ function convertInchesToFeet(number, trueHeight) {
         return "" + trueHeight + "." + number + " ft";
     }
 }
+
+/**
+ * This will provide a list of current users on the website. It currently does
+ * not have a selection bias at the moment.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get("/get/matches/:USER", (req, res) => {
 
     let c = req.cookies;
@@ -481,17 +516,13 @@ app.get("/get/matches/:USER", (req, res) => {
             res.end();
         }
     });
-
-    /*(db.collection("matches").findOne({email: user}, function(err, doc) {
-        if (doc) {
-            res.json(doc.matches)
-        }
-        else {
-            res.json([])
-        }
-    });*/
 });
 
+/**
+ * Converts a name to an email, to be used for different routes.
+ * 
+ * @param name - The name of the user.
+ */
 function convertNameToEmail(name) {
     console.log("Getting users with: " + name);
 
@@ -503,12 +534,18 @@ function convertNameToEmail(name) {
     }
 }
 
+/**
+ * Creates a "room" that will be used to match users. It adds a room number
+ * to account for more users.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.post('/create/room/', (req, res) => {
     console.log("Creating new room: ");
     let c = req.cookies;
     let user = c.login.email;
-    let other = convertNameToEmail(req.body.other);
-    
+
     if (rooms[roomNumbers] == null && users[user].roomId == 0) {
         // Room doesn't exist with specific number
         users[user].roomId = roomNumbers;
@@ -528,16 +565,27 @@ app.post('/create/room/', (req, res) => {
     
 });
 
+/**
+ * Grabs the current room ID of the client.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get('/getRoomId', (req, res) => {
     let c = req.cookies;
     let person = c.login.email;
 
-    console.log(users[person]);
-    console.log(JSON.stringify({ roomId: users[person].roomId }));
-
     res.json({ roomId: users[person].roomId });
 });
 
+/**
+ * Checks to see if the person the client likes is in the room. 
+ * If they are, then the server responds with false. If they are not, then
+ * the server responds with true. It adds matching preference to the client.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get('/get/room/:user', (req, res) => {
     console.log("Checking if user is in room");
     let c = req.cookies;
@@ -558,6 +606,14 @@ app.get('/get/room/:user', (req, res) => {
     }
 });
 
+/**
+ * If both users have matching preference for the other, then it checks
+ * to see if that has happened. If it did, then both clients will be
+ * sent to the same room.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.post('/join/room', (req, res) => {
     console.log("Finding out if you can join room");
     let other = convertNameToEmail(req.body.other);
@@ -590,34 +646,40 @@ app.post('/join/room', (req, res) => {
     }
 });
 
+/**
+ * It checks if client should be redirected to the match page.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.get('/get/roomStatus/:user', (req, res) => {
     let c = req.cookies;
     let person = c.login.email;
     let currentRoomNumber = 0;
-
-    
     for (entry in users) {
         if (entry == person) {
-	    console.log("Passed the entry and person test: " + person);
+	        console.log("Passed the entry and person test: " + person);
             currentRoomNumber = users[entry].roomId; 
-                 
             for (entry in users) {
-		console.log("Checking user: " + users[entry].name + " for " + person);
-		console.log("Room number of user " + users[entry].name + " : " + users[entry].roomId);
+                console.log("Checking user: " + users[entry].name + " for " + person);
+                console.log("Room number of user " + users[entry].name + " : " + users[entry].roomId);
                 if (users[entry].roomId == currentRoomNumber && parseFloat(currentRoomNumber) == currentRoomNumber && users[entry].email != person && currentRoomNumber != 0) {
                     
-		    setTimeout(()=> {
-			users[entry].roomId = 0;
-		    }, 10000);
-                   
+                    // It changes to 0 so that if the clients do not like the other person, they can match with new clients.
                     setTimeout(()=> {
-			if (users[entry].roomId != 0) {
-			    res.end("true");
-			    console.log("Sent");
-			}
-	            	
-		    }, Math.floor(Math.random() * 5000));	  
-		   
+                        users[entry].roomId = 0;
+                    }, 10000);
+                        
+                    /* It sends a ping after a couple of seconds to give a buffer
+                    ** for both clients to connect.
+                    */
+                    setTimeout(()=> {
+                        if (users[entry].roomId != 0) {
+                            res.end("true");    
+                        }
+                            
+                    }, Math.floor(Math.random() * 5000));	  
+                
                     return;
                 }
             }
@@ -787,6 +849,14 @@ async function verifyOTP(OTP, email) {
     return await user;
 }
 
+
+/**
+ * An upload route for the use of getting photos from the client.
+ * Unfortunately, we were unable to implement this in time.
+ * 
+ * @param req - The request from the client.
+ * @param res - The response from the server.
+ */
 app.post('/upload', (req, res) => {
 
 });

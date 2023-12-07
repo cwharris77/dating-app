@@ -1,11 +1,19 @@
+/*
+  Author: Jason Doe, Cooper Harris, Akli Amrous, Christopher Le
+  File Name: cam.js
+  Class: CSC 337
+
+  This file handles the webcam feature of the website. It immediately boots up and
+  creates a connection with a peer connection. Then, it waits for another client
+  to join the socket room. 
+*/
+
 const localElement = document.getElementById('local');
 const remoteElement = document.getElementById('remote');
 const webcamButton = document.getElementById("turnOn");
 const endWebcamButton = document.getElementById("turnOff");
 
-//const hostname = "134.209.15.30";
 const hostname = "joinlovemingle.xyz";
-//const port = 3001;
 const port = 443;
 
 const socket = io.connect(`https://${hostname}:${port}/`, {secure: true});
@@ -13,9 +21,13 @@ const peerConnection = new Peer();
 
 var roomId = null;
 
+/**
+ * getRoomId will go to the server and ask which room the current user is. 
+ * If the user is in a room, then they will join it and start the webcam code.
+ */
+
 function getRoomId() {
    var url = `https://${hostname}:${port}/getRoomId`;
-
    fetch(url)
    .then((result) => result.json())
    .then((data) => {
@@ -32,11 +44,13 @@ function getRoomId() {
             console.log(userId + " has left the channel!");
          });
          
-         var receivedMediaStream = null;
          var currentStream = null;
          
          localElement.muted = true
          
+         /**
+          * This will add a stream to a video HTML element.
+          */
          function addVideoStream(video, stream) {
             // This plays a video onto the laptop
             video.srcObject = stream;
@@ -44,22 +58,18 @@ function getRoomId() {
                video.play();
             })
             currentStream = stream;
-         
             console.log("Done with making stream");
          }
          
-         
-         
-         function startCall() {
-         
-            console.log("Pressed!");
-           
+         /**
+          * Start call will begin the process of starting the webcam for the client.
+          */
+         function startCall() { 
             navigator.mediaDevices.getUserMedia({
                video: true,
                audio: true
             }).then(stream => {
                addVideoStream(localElement, stream);
-         
          
                console.log("Checking new status");
          
@@ -80,20 +90,19 @@ function getRoomId() {
                });
                
             });
-         
          }
          
+         /**
+          * This connects a different client's stream to the current client remote video HTML element.
+          */
          function connectToNewUser(userId, stream) {
             // Sending this audio and stream to this specific user
             console.log("Making new call");
-         
             const call = peerConnection.call(userId, stream);
-         
             console.log(call);
             
             call.on('stream', otherUserVideoStream => {
                // This adds the recieved stream into the "remote "
-         
                console.log("Adding new stream");
                addVideoStream(remoteElement, otherUserVideoStream);
             });
@@ -102,12 +111,6 @@ function getRoomId() {
                console.log("Removed from server");
             });
          }
-         
-         function hangUp() {
-            console.log("To be disconnected");
-         }
-         
-         
          
          startCall();
       }

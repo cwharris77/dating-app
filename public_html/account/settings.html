@@ -1,10 +1,18 @@
+<!-- 
+    File: settings.html
+    Purpose: This HTML file defines the user settings page for Love Mingle. 
+             Users can customize push notification preferences and specify gender preferences.
+             Additionally, the file includes a form for account settings, a link to the user's profile,
+             and a footer with copyright information. The user interface is styled using external CSS files,
+             and the functionality is enhanced with an external JavaScript file.
+-->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Your Dating App</title>
+    <title>Settings - Love Mingle</title>
     <link rel="stylesheet" href="../css/settings.css">
     <link rel="stylesheet" href="../css/main.css">
 </head>
@@ -14,9 +22,11 @@
         <form action="" id="userSettings">
             <!-- User preferences and account management options -->
             <h2>Settings</h2>
-
+            <!-- Section for push notification preferences -->
             <div id="pushNotifications">
               <h3>Push Notifications</h3>
+                <!-- Checkboxes for allowing all notifications -->
+
                 <input type="checkbox" id="allowAll" name="notif" checked>
                 <label for="allowAll">
                     Allow all notifications
@@ -32,11 +42,12 @@
                     New Matches
                 </label>
             </div>
-
+            <!-- Section for gender preference -->
             <div action="" id="gender-preference-container">
                 <div class="input-container">
                     <h3>I'm interested in</h3>
-
+                    <!-- Radio buttons for different gender preferences -->
+                    
                     <input type="radio" id="men-option" name="preference" value="men">
                     <label for="men-option">
                         Men

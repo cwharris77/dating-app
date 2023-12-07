@@ -1,3 +1,10 @@
+/*
+    File: settings.css
+    Purpose: This stylesheet defines the styling for the user settings page of Love Mingle.
+             It includes styles for the overall body layout, form structure, input containers,
+             gender preference section, and push notifications section.
+             The styles are designed to provide a clean and user-friendly interface.
+*/
 body {
     display: flex;
     align-items: center;

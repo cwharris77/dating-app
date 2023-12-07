@@ -1,3 +1,12 @@
+/*
+    Author: Akli Amrous, Christopher Le, Cooper Harris, Jason Doe, 
+    File Name: editprofile.js
+    Class: CSC 337
+
+    This program allows the edit profile page to get the profile data from the page
+    and send it to the server to update the profile.
+
+*/
 const submit_edit = document.getElementById("submit-profile");
 
 function handle_submit() {
